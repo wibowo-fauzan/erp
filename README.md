@@ -1,59 +1,150 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Beauty Care ERP
 
-## About Laravel
+**Sistem pengelolaan Beauty Care berbasis Laravel**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Kelola operasional Beauty Care melalui aplikasi web dengan panel administrasi Filament.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<br>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white)
+![Filament](https://img.shields.io/badge/Filament-3.3-FDAE4B)
 
-## Learning Laravel
+</div>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Tentang proyek
 
-## Laravel Sponsors
+Beauty Care ERP adalah aplikasi berbasis Laravel untuk mendukung pengelolaan layanan Beauty Care. Aplikasi ini menggunakan **Filament** sebagai panel administrasi dan menyediakan fondasi autentikasi pengguna.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Fitur yang tersedia
 
-### Premium Partners
+- Panel admin Filament di `/admin`.
+- Halaman login Beauty Care dengan email dan kata sandi.
+- Daftar akun dengan email dan kata sandi.
+- Login dan pendaftaran menggunakan Google OAuth.
+- Tiga role pengguna: `user`, `owner`, dan `admin`.
+- Akun baru secara default memiliki role `user`.
+- Hanya role `owner` dan `admin` yang dapat mengakses panel `/admin`.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+> Pengelolaan fitur operasional ERP dapat dikembangkan sesuai kebutuhan bisnis.
 
-## Contributing
+## Teknologi
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Komponen | Versi |
+| --- | --- |
+| PHP | 8.2+ |
+| Laravel | 12 |
+| Filament | 3.3 |
+| Laravel Socialite | 5 |
 
-## Code of Conduct
+## Persyaratan
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Pastikan perangkat telah memiliki:
 
-## Security Vulnerabilities
+- PHP 8.2 atau lebih baru beserta ekstensi yang dibutuhkan Laravel.
+- [Composer](https://getcomposer.org/).
+- [Node.js dan npm](https://nodejs.org/).
+- Database yang dikonfigurasi pada file `.env` (SQLite, MySQL, atau database Laravel lain yang sesuai).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Instalasi lokal
 
-## License
+Jalankan perintah berikut dari folder proyek di PowerShell:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```powershell
+composer install
+Copy-Item .env.example .env
+php artisan key:generate
+```
+
+Atur koneksi database pada `.env`, kemudian jalankan migrasi:
+
+```powershell
+php artisan migrate
+```
+
+Pasang dependensi frontend:
+
+```powershell
+npm install
+```
+
+Jalankan aplikasi. Gunakan dua terminal terpisah:
+
+```powershell
+# Terminal 1
+php artisan serve
+```
+
+```powershell
+# Terminal 2
+npm run dev
+```
+
+Secara default, aplikasi tersedia di [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+## Halaman aplikasi
+
+| Halaman | URL lokal | Keterangan |
+| --- | --- | --- |
+| Halaman utama | `/` | Halaman depan aplikasi |
+| Daftar akun | `/register` | Membuat akun dengan role `user` |
+| Login admin | `/admin/login` | Masuk menggunakan email/kata sandi atau Google |
+| Panel admin | `/admin` | Hanya tersedia untuk role `owner` dan `admin` |
+
+Pengguna dengan role `user` dapat login, tetapi tidak mendapat akses ke panel admin.
+
+## Mengaktifkan Google Login
+
+Google Login memerlukan OAuth Client bertipe **Web application** di [Google Cloud Console](https://console.cloud.google.com/).
+
+Untuk pengembangan lokal dengan `php artisan serve`, atur alamat berikut pada OAuth Client:
+
+**Authorized JavaScript origins**
+
+```text
+http://127.0.0.1:8000
+```
+
+**Authorized redirect URIs**
+
+```text
+http://127.0.0.1:8000/auth/google/callback
+```
+
+Tambahkan konfigurasi berikut ke `.env` dan isi Client ID serta Client Secret dari Google Cloud Console:
+
+```dotenv
+GOOGLE_CLIENT_ID=isi-client-id
+GOOGLE_CLIENT_SECRET=isi-client-secret
+GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback
+```
+
+Setelah mengubah konfigurasi, bersihkan cache:
+
+```powershell
+php artisan config:clear
+```
+
+Jika aplikasi OAuth masih berstatus **Testing**, tambahkan akun Google yang digunakan untuk mencoba sebagai *test user*. Callback Google harus sama persis dengan nilai `GOOGLE_REDIRECT_URI`.
+
+> **Keamanan:** jangan commit atau membagikan file `.env`. Jika Client Secret pernah terkirim atau terpublikasi, buat secret baru di Google Cloud Console dan perbarui nilainya di `.env`.
+
+## Role dan akses
+
+Semua pendaftaran baru—baik melalui form maupun Google—diberi role `user`. Role `owner` dan `admin` tidak dapat dipilih saat pendaftaran dan harus ditetapkan secara manual oleh pengelola tepercaya. Pastikan akun yang akan mengelola panel memiliki salah satu role tersebut.
+
+## Pengujian
+
+Jalankan seluruh tes aplikasi dengan:
+
+```powershell
+php artisan test
+```
+
+## Lisensi
+
+Proyek ini dikembangkan menggunakan Laravel. Lihat [lisensi Laravel](https://opensource.org/licenses/MIT) dan lisensi dependensi terkait untuk informasi lebih lanjut.
