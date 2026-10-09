@@ -50,9 +50,35 @@ class GoogleAuthenticationTest extends TestCase
         Socialite::shouldReceive('driver')->with('google')->once()->andReturn($provider);
 
         $this->get('/auth/google/callback')
-            ->assertRedirect('/admin/login')
+            ->assertRedirect('/login')
             ->assertSessionHasErrors('google');
 
         $this->assertDatabaseMissing('users', ['email' => 'unverified@example.com']);
+    }
+
+    public function test_google_login_does_not_authenticate_owner_or_admin_accounts(): void
+    {
+        $admin = User::factory()->create([
+            'email' => 'admin@example.com',
+            'role' => 'admin',
+        ]);
+
+        $googleUser = SocialiteUser::fake([
+            'id' => 'google-admin-id',
+            'email' => $admin->email,
+            'user' => ['verified_email' => true],
+        ]);
+
+        $provider = Mockery::mock();
+        $provider->shouldReceive('user')->once()->andReturn($googleUser);
+
+        Socialite::shouldReceive('driver')->with('google')->once()->andReturn($provider);
+
+        $this->get('/auth/google/callback')
+            ->assertRedirect(route('login'))
+            ->assertSessionHasErrors('google');
+
+        $this->assertGuest();
+        $this->assertNull($admin->fresh()->google_id);
     }
 }

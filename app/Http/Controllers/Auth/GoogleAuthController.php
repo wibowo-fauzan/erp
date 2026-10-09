@@ -23,12 +23,12 @@ class GoogleAuthController extends Controller
         $email = $googleUser->getEmail();
 
         if (! $email || ! filter_var($email, FILTER_VALIDATE_EMAIL) || ! ($googleUser->user['verified_email'] ?? false)) {
-            return redirect('/admin/login')->withErrors([
+            return redirect()->route('login')->withErrors([
                 'google' => 'Google harus memberikan alamat email terverifikasi untuk mendaftar.',
             ]);
         }
 
-        $user = DB::transaction(function () use ($googleUser, $email): User {
+        $user = DB::transaction(function () use ($googleUser, $email): ?User {
             $user = User::query()
                 ->where('google_id', $googleUser->getId())
                 ->first();
@@ -38,8 +38,12 @@ class GoogleAuthController extends Controller
             }
 
             if ($user) {
+                if ($user->role !== 'user') {
+                    return null;
+                }
+
                 if ($user->google_id && $user->google_id !== (string) $googleUser->getId()) {
-                    abort(403, 'Akun ini sudah terhubung ke akun Google lain.');
+                    return null;
                 }
 
                 $user->google_id = (string) $googleUser->getId();
@@ -59,9 +63,15 @@ class GoogleAuthController extends Controller
             ]);
         });
 
+        if (! $user) {
+            return redirect()->route('login')->withErrors([
+                'google' => 'Login Google hanya tersedia untuk akun user. Gunakan login admin untuk masuk ke panel.',
+            ]);
+        }
+
         Auth::login($user, remember: true);
         request()->session()->regenerate();
 
-        return redirect()->intended(route('home'));
+        return redirect()->route('home');
     }
 }

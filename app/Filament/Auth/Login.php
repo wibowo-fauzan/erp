@@ -6,10 +6,9 @@ use App\Models\User;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
-use Filament\Notifications\Notification;
-use Filament\Pages\Auth\Login as BaseLogin;
 use Filament\Forms\Components\Component;
+use Filament\Http\Responses\Auth\Contracts\LoginResponse;
+use Filament\Pages\Auth\Login as BaseLogin;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Validation\ValidationException;
 
@@ -56,20 +55,14 @@ class Login extends BaseLogin
 
         $user = Filament::auth()->user();
 
-        if (! $user instanceof User) {
+        if (! $user instanceof User || ! $user->canAccessPanel(Filament::getCurrentPanel())) {
             Filament::auth()->logout();
             $this->throwFailureValidationException();
         }
 
         session()->regenerate();
 
-        if ($user->canAccessPanel(Filament::getCurrentPanel())) {
-            return app(LoginResponse::class);
-        }
-
-        $this->redirect(route('home'));
-
-        return null;
+        return app(LoginResponse::class);
     }
 
     protected function getEmailFormComponent(): Component
@@ -101,12 +94,12 @@ class Login extends BaseLogin
             ->extraAttributes(['class' => 'beauty-login-submit']);
     }
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string|Htmlable
     {
         return 'Masuk - Beauty Care';
     }
 
-    public function getHeading(): string | Htmlable
+    public function getHeading(): string|Htmlable
     {
         return 'Selamat datang kembali';
     }

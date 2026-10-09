@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Auth\Login;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -16,7 +17,13 @@ class RegistrationTest extends TestCase
         $this->get('/admin/login')
             ->assertOk()
             ->assertSee('Beauty Care')
-            ->assertSee('auth/google');
+            ->assertSee('owner')
+            ->assertDontSee('auth/google');
+
+        $this->get('/login')
+            ->assertOk()
+            ->assertSee('Lanjutkan dengan Google')
+            ->assertSee('Daftar sekarang');
 
         $this->get('/register')
             ->assertOk()
@@ -48,7 +55,7 @@ class RegistrationTest extends TestCase
             ->assertForbidden();
     }
 
-    public function test_regular_users_can_sign_in_from_the_custom_admin_login_page(): void
+    public function test_regular_users_cannot_sign_in_from_the_admin_login_page(): void
     {
         $user = User::factory()->create([
             'email' => 'regular@example.com',
@@ -56,12 +63,65 @@ class RegistrationTest extends TestCase
             'role' => 'user',
         ]);
 
-        Livewire::test(\App\Filament\Auth\Login::class)
+        Livewire::test(Login::class)
             ->set('data.email', $user->email)
             ->set('data.password', 'user-password')
             ->call('authenticate')
+            ->assertHasErrors(['data.email']);
+
+        $this->assertGuest();
+    }
+
+    public function test_user_can_sign_in_from_the_user_login_page(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'regular@example.com',
+            'password' => 'user-password',
+            'role' => 'user',
+        ]);
+
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'user-password',
+        ])
             ->assertRedirect(route('home'));
 
         $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_admin_cannot_sign_in_from_the_user_login_page(): void
+    {
+        $admin = User::factory()->create([
+            'email' => 'admin@example.com',
+            'password' => 'admin-password',
+            'role' => 'admin',
+        ]);
+
+        $this->from('/login')
+            ->post('/login', [
+                'email' => $admin->email,
+                'password' => 'admin-password',
+            ])
+            ->assertRedirect('/login')
+            ->assertSessionHasErrors('email');
+
+        $this->assertGuest();
+    }
+
+    public function test_admin_can_sign_in_from_the_admin_login_page(): void
+    {
+        $admin = User::factory()->create([
+            'email' => 'admin@example.com',
+            'password' => 'admin-password',
+            'role' => 'admin',
+        ]);
+
+        Livewire::test(Login::class)
+            ->set('data.email', $admin->email)
+            ->set('data.password', 'admin-password')
+            ->call('authenticate')
+            ->assertHasNoErrors();
+
+        $this->assertAuthenticatedAs($admin);
     }
 }
