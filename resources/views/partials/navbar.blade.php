@@ -12,7 +12,7 @@
         </a>
 
         <nav class="desktop-nav" aria-label="Navigasi utama">
-            <a href="{{ route('home') }}" aria-current="page">Beranda</a>
+            <a href="{{ route('home') }}" aria-current="{{ request()->routeIs('home') ? 'page' : 'false' }}">Beranda</a>
             <a href="{{ route('home') }}#layanan">Layanan</a>
             <a href="{{ route('home') }}#promo">Promo</a>
             <a href="{{ route('home') }}#artikel">Artikel</a>
@@ -20,22 +20,36 @@
         </nav>
 
         <div class="nav-actions">
+            <a class="nav-login" href="{{ route('login') }}">Masuk</a>
             <a class="button button-pink button-small" href="{{ route('register') }}">Konsultasi</a>
         </div>
 
         <details class="mobile-menu">
-            <summary aria-label="Buka menu navigasi" role="button">
+            <summary aria-label="Buka menu navigasi" aria-controls="mobile-navigation">
                 <span></span><span></span><span></span>
             </summary>
-            <nav aria-label="Navigasi seluler">
-                <a href="{{ route('home') }}">Beranda</a>
+            <nav id="mobile-navigation" aria-label="Navigasi seluler">
+                <a href="{{ route('home') }}" aria-current="{{ request()->routeIs('home') ? 'page' : 'false' }}">Beranda</a>
                 <a href="{{ route('home') }}#layanan">Layanan</a>
                 <a href="{{ route('home') }}#promo">Promo</a>
                 <a href="{{ route('home') }}#artikel">Artikel</a>
                 <a href="{{ route('home') }}#tentang">Tentang kami</a>
                 <a href="{{ route('login') }}">Masuk</a>
-                <a href="{{ route('register') }}">Konsultasi</a>
+                <a class="mobile-menu-cta" href="{{ route('register') }}">Konsultasi <span aria-hidden="true">→</span></a>
             </nav>
         </details>
     </div>
 </header>
+<script>
+    document.querySelectorAll('.mobile-menu').forEach((menu) => {
+        menu.querySelectorAll('nav a').forEach((link) => {
+            link.addEventListener('click', () => menu.removeAttribute('open'));
+        });
+        menu.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                menu.removeAttribute('open');
+                menu.querySelector('summary').focus();
+            }
+        });
+    });
+</script>

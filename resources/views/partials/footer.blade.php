@@ -30,14 +30,23 @@
         </div>
 
         <div class="footer-contact">
-            <span class="eyebrow">Hubungi kami</span>
-            <p>Butuh informasi lebih lanjut? Buat akun dan mulai perjalanan perawatanmu.</p>
-            <a class="footer-social" href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram <span aria-hidden="true">↗</span></a>
+        <span class="eyebrow">Ikuti perjalanan kami</span>
+        <p>Temukan inspirasi beauty dan self-care dari Oeta Beauty Care.</p>
+        <div class="footer-socials" aria-label="Media sosial">
+            <a class="footer-social-icon" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle class="social-dot" cx="18" cy="6" r="1"/></svg>
+            </a>
+            <a class="footer-social-icon" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path class="social-fill" d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4.1 1.5-4.1 4.2v2.2H7.5V13h2.8v8h3.2Z"/></svg>
+            </a>
+            <a class="footer-social-icon" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3v11.2a4.2 4.2 0 1 1-3.6-4.1v3.2a1.1 1.1 0 1 0 .5.9V3H15Zm0 0c.3 2.4 1.7 4.2 4.5 4.6v3.2a8.2 8.2 0 0 1-4.5-1.7"/></svg>
+            </a>
         </div>
     </div>
 
     <div class="container footer-bottom">
-        <span>© {{ now()->year }} Beauty Care. Semua hak dilindungi.</span>
+        <span>© {{ now()->year }} Oeta Beauty Care. Semua hak dilindungi.</span>
         <span>Dibuat dengan perhatian untuk setiap dirimu.</span>
     </div>
 </footer>

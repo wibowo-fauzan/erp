@@ -6,7 +6,7 @@ use App\Http\Controllers\Auth\UserLoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('beranda');
 })->name('home');
 
 Route::middleware('guest')->group(function () {
