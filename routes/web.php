@@ -11,6 +11,7 @@ Route::get('/', function () {
 
 Route::view('/tentang-kami', 'about')->name('about');
 Route::view('/treatment', 'treatment')->name('treatment');
+Route::view('/wishlist', 'wishlist')->name('wishlist');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [UserLoginController::class, 'create'])->name('login');

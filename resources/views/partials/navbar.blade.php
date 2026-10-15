@@ -8,16 +8,20 @@
                     <path d="M6 20h28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
             </span>
-            <span class="brand-copy">Oeta <span>Beauty</span></span>
+            <span class="brand-copy">Octa <span>Beauty</span></span>
         </a>
 
         <nav class="desktop-nav" aria-label="Navigasi utama">
             <a href="{{ route('home') }}" aria-current="{{ request()->routeIs('home') ? 'page' : 'false' }}">Beranda</a>
             <a href="{{ route('about') }}" aria-current="{{ request()->routeIs('about') ? 'page' : 'false' }}">Tentang Kami</a>
-            <a href="{{ route('home') }}#layanan">Layanan</a>
+            <a href="{{ route('treatment') }}">Layanan</a>
             <a href="{{ route('home') }}#promo">Promo</a>
-            <a href="{{ route('home') }}#artikel">Artikel</a>
             <a href="#kontak">Kontak</a>
+            <a class="nav-wishlist" href="{{ route('wishlist') }}" aria-current="{{ request()->routeIs('wishlist') ? 'page' : 'false' }}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3s-7.5-4.6-7.5-9.6a4.2 4.2 0 0 1 7.5-2.6 4.2 4.2 0 0 1 7.5 2.6c0 5-7.5 9.6-7.5 9.6Z"/></svg>
+                Wishlist
+                <span class="nav-wishlist-count" id="wishlist-count" hidden>0</span>
+            </a>
         </nav>
 
         <div class="nav-actions">
@@ -32,10 +36,16 @@
             <nav id="mobile-navigation" aria-label="Navigasi seluler">
                 <a href="{{ route('home') }}" aria-current="{{ request()->routeIs('home') ? 'page' : 'false' }}">Beranda</a>
                 <a href="{{ route('about') }}">Tentang Kami</a>
-                <a href="{{ route('home') }}#layanan">Layanan</a>
+                <a href="{{ route('treatment') }}">Layanan</a>
                 <a href="{{ route('home') }}#promo">Promo</a>
-                <a href="{{ route('home') }}#artikel">Artikel</a>
                 <a href="#kontak">Kontak</a>
+                <a class="nav-wishlist" href="{{ route('wishlist') }}">
+                    <span class="nav-wishlist-label">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3s-7.5-4.6-7.5-9.6a4.2 4.2 0 0 1 7.5-2.6 4.2 4.2 0 0 1 7.5 2.6c0 5-7.5 9.6-7.5 9.6Z"/></svg>
+                        Wishlist
+                        <span class="nav-wishlist-count" id="wishlist-count-mobile" hidden>0</span>
+                    </span>
+                </a>
                 <a href="{{ route('login') }}">Masuk</a>
                 <a class="mobile-menu-cta" href="{{ route('register') }}">Booking Sekarang <span aria-hidden="true">→</span></a>
             </nav>
@@ -54,4 +64,32 @@
             }
         });
     });
+
+    const wishlistCounts = () => [document.getElementById('wishlist-count'), document.getElementById('wishlist-count-mobile')];
+
+    const updateWishlistCount = () => {
+        let items = [];
+
+        try {
+            items = JSON.parse(localStorage.getItem('octa.wishlist') || '[]');
+        } catch (error) {
+            items = [];
+        }
+
+        if (!Array.isArray(items)) {
+            items = [];
+        }
+
+        wishlistCounts().forEach((badge) => {
+            if (!badge) {
+                return;
+            }
+
+            badge.textContent = items.length;
+            badge.hidden = items.length === 0;
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', updateWishlistCount);
+    window.addEventListener('octa:wishlist-updated', updateWishlistCount);
 </script>

@@ -1,8 +1,8 @@
 @php
-    $seoTitle = trim($__env->yieldContent('meta_title')) ?: 'Oeta Beauty Care | Kulit Sehat, Cantik Setiap Hari';
-    $seoDescription = trim($__env->yieldContent('meta_description')) ?: 'Temukan inspirasi perawatan wajah, kulit, dan tubuh di Oeta Beauty Care. Nikmati pengalaman kecantikan yang nyaman dan personal.';
+    $seoTitle = trim($__env->yieldContent('meta_title')) ?: 'Octa Beauty Care | Kulit Sehat, Cantik Setiap Hari';
+    $seoDescription = trim($__env->yieldContent('meta_description')) ?: 'Temukan inspirasi perawatan wajah, kulit, dan tubuh di Octa Beauty Care. Nikmati pengalaman kecantikan yang nyaman dan personal.';
     $canonicalUrl = url()->current();
-    $siteName = 'Oeta Beauty Care';
+    $siteName = 'Octa Beauty Care';
     $ogLocale = 'id_ID';
     $socialImage = trim($__env->yieldContent('meta_image')) ?: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=1200&h=630&q=85';
     $structuredData = [
@@ -45,7 +45,7 @@
 <meta property="og:image" content="{{ $socialImage }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Oeta Beauty Care - layanan perawatan kulit dan kecantikan">
+<meta property="og:image:alt" content="Octa Beauty Care - layanan perawatan kulit dan kecantikan">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $seoTitle }}">
