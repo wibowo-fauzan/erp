@@ -9,6 +9,9 @@ Route::get('/', function () {
     return view('beranda');
 })->name('home');
 
+Route::view('/tentang-kami', 'about')->name('about');
+Route::view('/treatment', 'treatment')->name('treatment');
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [UserLoginController::class, 'create'])->name('login');
     Route::post('/login', [UserLoginController::class, 'store'])->middleware('throttle:5,1')->name('login.store');

@@ -13,15 +13,16 @@
 
         <nav class="desktop-nav" aria-label="Navigasi utama">
             <a href="{{ route('home') }}" aria-current="{{ request()->routeIs('home') ? 'page' : 'false' }}">Beranda</a>
+            <a href="{{ route('about') }}" aria-current="{{ request()->routeIs('about') ? 'page' : 'false' }}">Tentang Kami</a>
             <a href="{{ route('home') }}#layanan">Layanan</a>
             <a href="{{ route('home') }}#promo">Promo</a>
             <a href="{{ route('home') }}#artikel">Artikel</a>
-            <a href="{{ route('home') }}#tentang">Tentang kami</a>
+            <a href="#kontak">Kontak</a>
         </nav>
 
         <div class="nav-actions">
             <a class="nav-login" href="{{ route('login') }}">Masuk</a>
-            <a class="button button-pink button-small" href="{{ route('register') }}">Konsultasi</a>
+            <a class="button button-pink button-small" href="{{ route('register') }}">Booking Sekarang</a>
         </div>
 
         <details class="mobile-menu">
@@ -30,12 +31,13 @@
             </summary>
             <nav id="mobile-navigation" aria-label="Navigasi seluler">
                 <a href="{{ route('home') }}" aria-current="{{ request()->routeIs('home') ? 'page' : 'false' }}">Beranda</a>
+                <a href="{{ route('about') }}">Tentang Kami</a>
                 <a href="{{ route('home') }}#layanan">Layanan</a>
                 <a href="{{ route('home') }}#promo">Promo</a>
                 <a href="{{ route('home') }}#artikel">Artikel</a>
-                <a href="{{ route('home') }}#tentang">Tentang kami</a>
+                <a href="#kontak">Kontak</a>
                 <a href="{{ route('login') }}">Masuk</a>
-                <a class="mobile-menu-cta" href="{{ route('register') }}">Konsultasi <span aria-hidden="true">→</span></a>
+                <a class="mobile-menu-cta" href="{{ route('register') }}">Booking Sekarang <span aria-hidden="true">→</span></a>
             </nav>
         </details>
     </div>

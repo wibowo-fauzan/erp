@@ -1,101 +1,136 @@
 @php
+    $features = [
+        ['label' => 'Aman & Terpercaya', 'description' => 'Klinik terlisensi & terstandar', 'icon' => 'shield'],
+        ['label' => 'Terapis Profesional', 'description' => 'Ditangani tenaga ahli bersertifikat', 'icon' => 'user'],
+        ['label' => 'Hasil Optimal', 'description' => 'Teknologi modern & produk klinis', 'icon' => 'star'],
+    ];
+
     $services = [
-        ['name' => 'Facial Premium', 'description' => 'Perawatan menyeluruh untuk kulit yang tampak segar dan terawat.', 'image' => 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=700&q=85', 'alt' => 'Perawatan facial profesional', 'tag' => 'FAVORIT'],
-        ['name' => 'Acne Care', 'description' => 'Perhatian lembut untuk kulit yang rentan berjerawat.', 'image' => 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=700&q=85', 'alt' => 'Produk perawatan kulit', 'tag' => 'SKIN CONCERN'],
-        ['name' => 'Hydrating Glow', 'description' => 'Bantu kulit terasa lembap, nyaman, dan bercahaya.', 'image' => 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&w=700&q=85', 'alt' => 'Rangkaian skincare untuk hidrasi', 'tag' => 'GLOW & HYDRATE'],
-        ['name' => 'Relaxing Massage', 'description' => 'Waktu relaksasi untuk melepas penat dan merawat diri.', 'image' => 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=700&q=85', 'alt' => 'Suasana spa yang menenangkan', 'tag' => 'BODY TREATMENT'],
+        ['name' => 'Facial Treatments', 'description' => 'Perawatan mendalam untuk kulit segar, cerah, dan sehat setiap hari.', 'image' => 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=700&q=85', 'alt' => 'Perawatan facial mendalam'],
+        ['name' => 'Acne Care', 'description' => 'Solusi efektif untuk mengatasi jerawat dan mencegah bekasnya.', 'image' => 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=700&q=85', 'alt' => 'Produk perawatan jerawat'],
+        ['name' => 'Brightening', 'description' => 'Mencerahkan kulit kusam dan meratakan warna wajah secara bertahap.', 'image' => 'https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=700&q=85', 'alt' => 'Produk pencerah kulit'],
+        ['name' => 'Anti Aging', 'description' => 'Menunda tanda penuaan dan menjaga kekenyalan kulit Anda.', 'image' => 'https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?auto=format&fit=crop&w=700&q=85', 'alt' => 'Perawatan anti aging'],
     ];
 
     $reasons = [
-        ['title' => 'Terapis berpengalaman', 'description' => 'Ditangani oleh tim yang mengutamakan kenyamanan dan kebutuhanmu.', 'symbol' => '✳'],
-        ['title' => 'Produk pilihan', 'description' => 'Produk perawatan dipilih dengan perhatian pada kualitas.', 'symbol' => '♡'],
-        ['title' => 'Ruang yang nyaman', 'description' => 'Nikmati suasana tenang untuk jeda dari rutinitas harian.', 'symbol' => '⌂'],
-        ['title' => 'Perhatian personal', 'description' => 'Pengalaman perawatan menyesuaikan kebutuhan setiap pelanggan.', 'symbol' => '✧'],
+        ['title' => 'Konsultasi Personal', 'description' => 'Setiap treatment dimulai dengan analisis mendalam kondisi kulit Anda bersama dokter kami.'],
+        ['title' => 'Produk Berkualitas', 'description' => 'Kami hanya menggunakan produk premium yang sudah teruji klinis dan aman untuk kulit.'],
+        ['title' => 'Teknologi Modern', 'description' => 'Dilengkapi dengan alat estetika bertaraf internasional untuk hasil yang cepat dan tepat.'],
+        ['title' => 'Harga Terjangkau', 'description' => 'Kualitas premium kini bisa dinikmati oleh siapa saja dengan harga yang kompetitif.'],
     ];
 
     $promotions = [
-        ['eyebrow' => 'PAKET PERKENALAN', 'title' => 'Glow Starter', 'description' => 'Mulai rutinitas perawatan dengan pilihan favorit.', 'price' => 'Mulai dari Rp 199.000', 'image' => 'https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=800&q=85', 'alt' => 'Pilihan produk skincare', 'theme' => 'rose'],
-        ['eyebrow' => 'MOMEN BERDUA', 'title' => 'Self-care Duo', 'description' => 'Nikmati waktu perawatan dan relaksasi bersama.', 'price' => 'Paket mulai Rp 399.000', 'image' => 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=800&q=85', 'alt' => 'Ruang relaksasi untuk perawatan tubuh', 'theme' => 'dark'],
-        ['eyebrow' => 'PILIHAN BULAN INI', 'title' => 'Fresh Face Ritual', 'description' => 'Waktu singkat untuk wajah terasa lebih segar.', 'price' => 'Lihat paket perawatan', 'image' => 'https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?auto=format&fit=crop&w=800&q=85', 'alt' => 'Ritual perawatan wajah', 'theme' => 'rose'],
+        ['flag' => 'Paket Hemat', 'title' => 'Paket Glow Brightening', 'description' => 'Nikmati kombinasi facial dan masker pencerah untuk kulit cerah instan.', 'price' => 'Mulai Rp 199.000', 'action' => 'Ambil Promo', 'image' => 'https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=800&q=85', 'alt' => 'Rangkaian produk skincare pencerah'],
+        ['flag' => 'Kuota Terbatas', 'title' => 'First Visit Discount', 'description' => 'Diskon 30% untuk kunjungan pertama Anda untuk treatment apapun.', 'price' => 'Diskon 30%', 'action' => 'Klaim Sekarang', 'image' => 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=800&q=85', 'alt' => 'Ruang perawatan untuk kunjungan pertama'],
+        ['flag' => 'Momen Berdua', 'title' => 'BFF Beauty Day', 'description' => 'Ajak sahabatmu dan nikmati treatment berdua dengan harga spesial.', 'price' => 'Paket Rp 399.000', 'action' => 'Ajak Teman', 'image' => 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=85', 'alt' => 'Treatment berdua di ruang relaksasi'],
     ];
 
-    $treatmentBenefits = [
-        'Dimulai dengan konsultasi singkat',
-        'Rangkaian perawatan dengan produk pilihan',
-        'Waktu relaksasi untuk dirimu',
+    $benefits = [
+        'Deep Cleansing & Detox',
+        '24K Gold Serum Infusion',
+        'Anti-Aging Face Massage',
     ];
 
-    $articles = [
-        ['category' => 'SKINCARE', 'title' => 'Rutinitas sederhana untuk kulit terasa lebih nyaman', 'excerpt' => 'Kenali langkah dasar merawat kulit yang bisa dimulai dari rumah.', 'image' => 'https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?auto=format&fit=crop&w=700&q=85', 'alt' => 'Perawatan kulit sederhana di rumah'],
-        ['category' => 'SELF-CARE', 'title' => 'Meluangkan waktu untuk diri sendiri bukan hal egois', 'excerpt' => 'Temukan cara kecil untuk menyisipkan jeda di tengah rutinitas.', 'image' => 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=700&q=85', 'alt' => 'Momen perawatan diri yang menenangkan'],
-        ['category' => 'BEAUTY TIPS', 'title' => 'Apa yang perlu disiapkan sebelum facial pertama?', 'excerpt' => 'Beberapa hal sederhana agar kunjungan pertamamu lebih nyaman.', 'image' => 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=700&q=85', 'alt' => 'Persiapan untuk perawatan facial'],
-        ['category' => 'WELLNESS', 'title' => 'Ritual relaksasi singkat setelah hari yang panjang', 'excerpt' => 'Ide sederhana untuk membantu tubuh dan pikiran beristirahat.', 'image' => 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=700&q=85', 'alt' => 'Suasana relaksasi dan wellness'],
+    $testimonials = [
+        ['name' => 'Siska Amelia', 'role' => 'Pelanggan Setia', 'initials' => 'SA', 'quote' => 'Treatment Acne Care di Octa berhasil mengatasi jerawat yang mengganggu sekali. Tempatnya nyaman dan hasilnya luar biasa.'],
+        ['name' => 'Riana Puspita', 'role' => 'Pelanggan Setia', 'initials' => 'RP', 'quote' => 'Kulit wajah saya jadi lebih cerah dan sehat setelah facial treatment di sini. Pelayanannya sangat profesional.'],
+        ['name' => 'Elyzabeth Tanaya', 'role' => 'Member Premium', 'initials' => 'ET', 'quote' => 'Harga terjangkau dengan kualitas premium. Konsultasinya detail dan terapisnya benar-benar memahami kondisi kulit saya.'],
     ];
 
+    $instaPosts = [
+        ['image' => 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=85', 'alt' => 'Perawatan facial di Octa Beauty Care'],
+        ['image' => 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=600&q=85', 'alt' => 'Persiapan perawatan wajah'],
+        ['image' => 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=600&q=85', 'alt' => 'Produk skincare favorit'],
+        ['image' => 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=600&q=85', 'alt' => 'Momen perawatan wajah'],
+        ['image' => 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=600&q=85', 'alt' => 'Kulit sehat dan bercahaya'],
+    ];
 @endphp
 
 @extends('layouts.website')
 
-@section('meta_title', 'Oeta Beauty Care | Kulit Sehat, Cantik Setiap Hari')
-@section('meta_description', 'Jelajahi perawatan wajah, body treatment, dan momen self-care di Oeta Beauty Care. Pengalaman nyaman dan personal untuk merawat dirimu.')
+@section('meta_title', 'Octa Beauty Care | Kulit Sehat, Cantik Setiap Hari')
+@section('meta_description', 'Wujudkan impian kulit wajah yang cerah, sehat, dan bercahaya bersama para ahli perawatan Octa Beauty Care. Booking treatment facial, acne care, brightening, dan anti aging.')
 @section('meta_image', 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=1200&h=630&q=85')
 
 @section('content')
-    <section class="hero" aria-labelledby="hero-title">
-        <div class="container hero-grid">
-            <div class="hero-copy">
-                <span class="eyebrow"><span class="eyebrow-dot"></span> Oeta Beauty Care</span>
+    <section class="octa-hero" aria-labelledby="hero-title">
+        <div class="container octa-hero-grid">
+            <div class="octa-hero-copy">
+                <span class="eyebrow"><span class="eyebrow-dot"></span> Octa Face &amp; Beauty Care</span>
                 <h1 id="hero-title">Kulit Sehat,<br><em>Cantik Setiap Hari</em></h1>
-                <p class="hero-description">Temukan waktu untuk merawat diri dengan perawatan wajah dan tubuh yang nyaman, personal, dan penuh perhatian.</p>
-                <div class="hero-actions">
-                    <a class="button button-pink" href="{{ route('register') }}">Mulai Perawatan <span aria-hidden="true">→</span></a>
-                    <a class="text-link" href="#layanan">Jelajahi layanan <span aria-hidden="true">↗</span></a>
-                </div>
-                <div class="hero-trust">
-                    <span class="trust-icon" aria-hidden="true">✧</span>
-                    <p><strong>Waktu terbaik adalah waktu untuk dirimu.</strong><br>Ruang nyaman untuk jeda dan merawat diri.</p>
+                <p class="octa-hero-desc">Wujudkan impian kulit wajah yang cerah, sehat, dan bercahaya bersama para ahli perawatan kami. Perawatan modern yang dirancang khusus untuk kebutuhan unik kulit Anda.</p>
+                <div class="octa-hero-actions">
+                    <a class="button button-pink" href="{{ route('register') }}">Booking Sekarang</a>
+                    <a class="octa-hero-link" href="#layanan">Lihat Layanan <span class="octa-hero-link-arrow" aria-hidden="true">→</span></a>
                 </div>
             </div>
-            <div class="hero-photo">
-                <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=1200&q=90" alt="Perawatan wajah yang menenangkan">
-                <div class="hero-photo-wash" aria-hidden="true"></div>
-                <div class="hero-stamp" aria-label="Perawatan dengan penuh perhatian">
-                    <span>CARE<br>FOR YOUR<br>BEAUTY</span><b aria-hidden="true">✧</b>
+            <div class="octa-hero-art">
+                <div class="octa-hero-main">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=900&q=90" alt="Perawatan wajah profesional di Octa Beauty Care" fetchpriority="high">
                 </div>
-                <div class="hero-photo-label"><span>RITUAL SELF-CARE</span><span>01 / OETA BEAUTY</span></div>
+                <div class="octa-hero-float octa-hero-float-expert">
+                    <span class="octa-hero-float-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c0-3.5 3-5.8 7-5.8s7 2.3 7 5.8"/><path d="m9 12.5 1.8 1.8L15 10"/></svg>
+                    </span>
+                    <div>
+                        <strong>Terapis Bersertifikat</strong>
+                        <span>Ditangani tenaga ahli</span>
+                    </div>
+                </div>
+                <div class="octa-hero-float octa-hero-float-clients">
+                    <span class="octa-hero-float-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path class="octa-solid" d="M12 3.2l2.5 5.4 5.9.7-4.4 4 1.2 5.8-5.2-2.9-5.2 2.9 1.2-5.8-4.4-4 5.9-.7L12 3.2Z"/></svg>
+                    </span>
+                    <div>
+                        <strong>10k+</strong>
+                        <span>Pelanggan Puas</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="trust-strip container" aria-label="Keunggulan Oeta Beauty Care">
-        <div class="trust-item"><span aria-hidden="true">✳</span><p><strong>Perawatan personal</strong><small>Untuk kebutuhanmu</small></p></div>
-        <span class="trust-divider" aria-hidden="true"></span>
-        <div class="trust-item"><span aria-hidden="true">♡</span><p><strong>Produk pilihan</strong><small>Dengan perhatian pada kualitas</small></p></div>
-        <span class="trust-divider" aria-hidden="true"></span>
-        <div class="trust-item"><span aria-hidden="true">✧</span><p><strong>Suasana nyaman</strong><small>Waktu untuk dirimu</small></p></div>
+    <section class="octa-strip" aria-label="Keunggulan Octa Beauty Care">
+        <div class="container octa-strip-grid">
+            @foreach ($features as $feature)
+                <div class="octa-strip-item">
+                    <span class="octa-strip-icon" aria-hidden="true">
+                        @if ($feature['icon'] === 'shield')
+                            <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.4-3 7.3-7 8.5-4-1.2-7-4.1-7-8.5V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                        @elseif ($feature['icon'] === 'user')
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20.5c0-3.7 3.3-6 7.5-6s7.5 2.3 7.5 6"/><path d="M9.5 13.4 9 20.5M14.5 13.4l.5 7.1"/></svg>
+                        @else
+                            <svg viewBox="0 0 24 24"><path class="octa-solid" d="M12 3.2l2.5 5.4 5.9.7-4.4 4 1.2 5.8-5.2-2.9-5.2 2.9 1.2-5.8-4.4-4 5.9-.7L12 3.2Z"/></svg>
+                        @endif
+                    </span>
+                    <div>
+                        <strong>{{ $feature['label'] }}</strong>
+                        <span>{{ $feature['description'] }}</span>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </section>
 
-    <section class="section services-section" id="layanan" aria-labelledby="services-title">
+    <section class="octa-services" id="layanan" aria-labelledby="layanan-title">
         <div class="container">
-            <div class="section-heading">
+            <div class="octa-section-head">
                 <div>
-                    <span class="eyebrow"><span class="eyebrow-dot"></span> Layanan kami</span>
-                    <h2 id="services-title">Temukan perawatan yang <em>tepat untukmu</em></h2>
-                    <p class="section-intro">Pilihan perawatan untuk membantu kamu merasa segar, nyaman, dan percaya diri.</p>
+                    <span class="eyebrow"><span class="eyebrow-dot"></span> Layanan Kami</span>
+                    <h2 id="layanan-title">Layanan <em>Unggulan</em> Kami</h2>
+                    <p class="octa-section-desc">Berbagai pilihan treatment yang dirancang untuk memberikan hasil maksimal bagi kesehatan dan keindahan kulit Anda.</p>
                 </div>
-                <a class="text-link" href="{{ route('register') }}">Lihat semua layanan <span aria-hidden="true">↗</span></a>
+                <a class="octa-link-more" href="{{ route('register') }}">Lihat Selengkapnya <span aria-hidden="true">→</span></a>
             </div>
-            <div class="service-grid">
+            <div class="octa-service-grid">
                 @foreach ($services as $service)
-                    <article class="service-card">
-                        <a class="service-image" href="{{ route('register') }}" aria-label="Pilih layanan {{ $service['name'] }}">
+                    <article class="octa-service-card">
+                        <div class="octa-service-media">
                             <img src="{{ $service['image'] }}" alt="{{ $service['alt'] }}" loading="lazy">
-                            <span class="service-number">{{ sprintf('%02d', $loop->iteration) }}</span>
-                            <span class="service-tag">{{ $service['tag'] }}</span>
-                        </a>
-                        <div class="service-info">
-                            <div><h3>{{ $service['name'] }}</h3><p>{{ $service['description'] }}</p></div>
-                            <a class="service-arrow" href="{{ route('register') }}" aria-label="Pilih {{ $service['name'] }}">↗</a>
+                        </div>
+                        <div class="octa-service-body">
+                            <h3>{{ $service['name'] }}</h3>
+                            <p>{{ $service['description'] }}</p>
                         </div>
                     </article>
                 @endforeach
@@ -103,125 +138,149 @@
         </div>
     </section>
 
-    <section class="section about-section" id="tentang" aria-labelledby="about-title">
-        <div class="container about-grid">
-            <div class="about-photo">
-                <img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=1000&q=85" alt="Interior ruang perawatan yang tenang" loading="lazy">
-                <span class="about-photo-number">OETA BEAUTY CARE · EST. WITH CARE</span>
-                <div class="about-photo-caption"><strong>Ruang nyaman untukmu</strong><span>JEDA SEJENAK, RAWAT DIRI</span></div>
-            </div>
-            <div class="about-copy">
-                <span class="eyebrow"><span class="eyebrow-dot"></span> Tentang kami</span>
-                <h2 id="about-title">Merawat diri adalah cara untuk <em>menyayangi diri</em></h2>
-                <p class="about-lead">Di Oeta Beauty Care, setiap kunjungan adalah kesempatan untuk berhenti sejenak, merasa nyaman, dan memberikan perhatian lebih untuk dirimu.</p>
-                <div class="benefit-list">
-                    @foreach ($reasons as $reason)
-                        <div class="benefit-item">
-                            <span class="benefit-check" aria-hidden="true">{{ $reason['symbol'] }}</span>
-                            <div><h3>{{ $reason['title'] }}</h3><p>{{ $reason['description'] }}</p></div>
-                        </div>
-                    @endforeach
+    <section class="octa-why" aria-labelledby="why-title">
+        <div class="container octa-why-grid">
+            <div class="octa-why-art">
+                <img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=1000&q=85" alt="Ruang perawatan modern Octa Beauty Care" loading="lazy">
+                <div class="octa-why-badge">
+                    <strong>10k+</strong>
+                    <span>Happy Clients<br>Kulit mereka bercahaya bersama Octa</span>
                 </div>
-                <a class="button button-outline" href="{{ route('register') }}">Kenali layanan kami <span aria-hidden="true">→</span></a>
             </div>
-        </div>
-    </section>
-
-    <section class="section promotions-section" id="promo" aria-labelledby="promotions-title">
-        <div class="container">
-            <div class="section-heading section-heading-centered">
-                <span class="eyebrow"><span class="eyebrow-dot"></span> Penawaran spesial</span>
-                <h2 id="promotions-title">Sedikit jeda, <em>banyak bahagia</em></h2>
-                <p class="section-intro">Temukan paket pilihan untuk memulai atau melengkapi momen self-care-mu.</p>
-            </div>
-            <div class="promotion-grid">
-                @foreach ($promotions as $promotion)
-                    <article class="promotion-card {{ $promotion['theme'] === 'dark' ? 'promotion-dark' : '' }}">
-                        <div class="promotion-image">
-                            <img src="{{ $promotion['image'] }}" alt="{{ $promotion['alt'] }}" loading="lazy">
-                            <span class="promotion-badge">{{ $promotion['eyebrow'] }}</span>
-                        </div>
-                        <div class="promotion-copy">
-                            <h3>{{ $promotion['title'] }}</h3>
-                            <p>{{ $promotion['description'] }}</p>
-                            <div class="promotion-bottom"><span>{{ $promotion['price'] }}</span><a href="{{ route('register') }}" aria-label="Lihat promo {{ $promotion['title'] }}">↗</a></div>
-                        </div>
-                    </article>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    <section class="featured-section" aria-labelledby="featured-title">
-        <div class="container featured-card">
-            <div class="featured-image">
-                <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=1000&q=90" alt="Perawatan facial premium dengan masker wajah" loading="lazy">
-                <span class="featured-image-label">PILIHAN PERAWATAN OETA</span>
-            </div>
-            <div class="featured-copy">
-                <span class="eyebrow">PENGALAMAN PILIHAN</span>
-                <h2 id="featured-title">Oeta Royal Gold Facial</h2>
-                <p>Ritual facial premium yang memadukan sentuhan relaksasi dan perawatan kulit dalam satu pengalaman istimewa.</p>
-                <ul>
-                    @foreach ($treatmentBenefits as $benefit)
-                        <li><span aria-hidden="true">✓</span>{{ $benefit }}</li>
+            <div class="octa-why-copy">
+                <span class="eyebrow"><span class="eyebrow-dot"></span> Kenapa Memilih Kami</span>
+                <h2 id="why-title">Kenapa Memilih <em>Octa Beauty Care?</em></h2>
+                <p>Kami menggabungkan teknologi modern dengan perawatan ahli untuk hasil yang terbaik bagi kulit Anda.</p>
+                <ul class="octa-why-list">
+                    @foreach ($reasons as $reason)
+                        <li class="octa-why-item">
+                            <span class="octa-check" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>
+                            </span>
+                            <div>
+                                <h3>{{ $reason['title'] }}</h3>
+                                <p>{{ $reason['description'] }}</p>
+                            </div>
+                        </li>
                     @endforeach
                 </ul>
-                <a class="button button-pink" href="{{ route('register') }}">Jelajahi perawatan <span aria-hidden="true">→</span></a>
             </div>
         </div>
     </section>
 
-    <section class="section reasons-section" aria-labelledby="reasons-title">
+    <section class="octa-promo" id="promo" aria-labelledby="promo-title">
         <div class="container">
-            <div class="section-heading section-heading-centered">
-                <span class="eyebrow"><span class="eyebrow-dot"></span> Keistimewaan Oeta</span>
-                <h2 id="reasons-title">Perhatian kecil, pengalaman <em>yang berarti</em></h2>
-                <p class="section-intro">Kami ingin setiap momen perawatan terasa tenang, nyaman, dan personal.</p>
+            <div class="octa-promo-head">
+                <span class="eyebrow"><span class="eyebrow-dot"></span> Penawaran Spesial</span>
+                <h2 id="promo-title">Promo Spesial <em>Bulan Ini</em></h2>
+                <p>Jangan lewatkan kesempatan untuk mendapatkan perawatan terbaik dengan harga hemat.</p>
             </div>
-            <div class="reasons-grid">
-                @foreach (array_slice($reasons, 0, 3) as $reason)
-                    <article class="reason-card">
-                        <span class="reason-symbol" aria-hidden="true">{{ $reason['symbol'] }}</span>
-                        <div><h3>{{ $reason['title'] }}</h3><p>{{ $reason['description'] }}</p></div>
+            <div class="octa-promo-grid">
+                @foreach ($promotions as $promo)
+                    <article class="octa-promo-card">
+                        <div class="octa-promo-media">
+                            <img src="{{ $promo['image'] }}" alt="{{ $promo['alt'] }}" loading="lazy">
+                            <span class="octa-promo-flag">{{ $promo['flag'] }}</span>
+                        </div>
+                        <div class="octa-promo-body">
+                            <h3>{{ $promo['title'] }}</h3>
+                            <p>{{ $promo['description'] }}</p>
+                            <div class="octa-promo-foot">
+                                <span class="octa-promo-price">{{ $promo['price'] }}</span>
+                                <a class="octa-promo-btn" href="{{ route('register') }}">{{ $promo['action'] }}</a>
+                            </div>
+                        </div>
                     </article>
                 @endforeach
             </div>
         </div>
     </section>
 
-    <section class="section articles-section" id="artikel" aria-labelledby="articles-title">
+    <section class="octa-featured" aria-labelledby="featured-title">
         <div class="container">
-            <div class="section-heading">
-                <div>
-                    <span class="eyebrow"><span class="eyebrow-dot"></span> Jurnal kecantikan</span>
-                    <h2 id="articles-title">Cerita kecil tentang <em>beauty & self-care</em></h2>
+            <div class="octa-featured-card">
+                <div class="octa-featured-media">
+                    <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=1000&q=90" alt="Oeta Royal Gold Facial treatment" loading="lazy">
                 </div>
-                <a class="text-link" href="#artikel">Jelajahi artikel <span aria-hidden="true">↗</span></a>
+                <div class="octa-featured-copy">
+                    <span class="eyebrow">Premium Treatment</span>
+                    <h2 id="featured-title">Oeta Royal Gold Facial</h2>
+                    <p>Manjakan diri Anda dengan treatment paling mewah kami. Menggunakan partikel emas 24 karat untuk mencerahkan, mengencangkan, dan memberikan kilau natural pada wajah Anda.</p>
+                    <ul class="octa-featured-list">
+                        @foreach ($benefits as $benefit)
+                            <li>
+                                <span class="octa-check" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>
+                                </span>
+                                {{ $benefit }}
+                            </li>
+                        @endforeach
+                    </ul>
+                    <a class="button button-pink" href="{{ route('register') }}">Booking Treatment Ini</a>
+                </div>
             </div>
-            <div class="article-grid">
-                @foreach ($articles as $article)
-                    <article class="article-card">
-                        <a class="article-image" href="#artikel" aria-label="Baca {{ $article['title'] }}">
-                            <img src="{{ $article['image'] }}" alt="{{ $article['alt'] }}" loading="lazy">
-                        </a>
-                        <span class="article-category">{{ $article['category'] }}</span>
-                        <h3><a href="#artikel">{{ $article['title'] }}</a></h3>
-                        <p>{{ $article['excerpt'] }}</p>
-                        <a class="article-link" href="#artikel">Baca selengkapnya <span aria-hidden="true">→</span></a>
+        </div>
+    </section>
+
+    <section class="octa-testi" aria-labelledby="testi-title">
+        <div class="container">
+            <div class="octa-testi-head">
+                <span class="eyebrow"><span class="eyebrow-dot"></span> Testimoni</span>
+                <h2 id="testi-title">Apa Kata <em>Mereka?</em></h2>
+                <p>Ribuan perempuan puas dengan transformasi kulit mereka di Octa Beauty Care.</p>
+            </div>
+            <div class="octa-testi-grid">
+                @foreach ($testimonials as $testimonial)
+                    <article class="octa-testi-card">
+                        <div class="octa-testi-stars" aria-label="Rating 5 dari 5">★★★★★</div>
+                        <blockquote>{{ $testimonial['quote'] }}</blockquote>
+                        <div class="octa-testi-author">
+                            <span class="octa-testi-avatar" aria-hidden="true">{{ $testimonial['initials'] }}</span>
+                            <div>
+                                <strong>{{ $testimonial['name'] }}</strong>
+                                <span>{{ $testimonial['role'] }}</span>
+                            </div>
+                        </div>
                     </article>
                 @endforeach
             </div>
         </div>
     </section>
 
-    <section class="closing-cta" aria-labelledby="cta-title">
-        <div class="container closing-cta-inner">
-            <span class="cta-flower" aria-hidden="true">✿</span>
-            <span class="eyebrow">WAKTUNYA UNTUK DIRIMU</span>
-            <h2 id="cta-title">Siap untuk merasa <em>lebih baik?</em></h2>
-            <p>Mulai perjalanan self-care-mu bersama Oeta Beauty Care. Kami akan menemani setiap langkahnya.</p>
-            <a class="button button-light" href="{{ route('register') }}">Buat janji perawatan <span aria-hidden="true">→</span></a>
+    <section class="octa-insta" id="artikel" aria-labelledby="insta-title">
+        <div class="container">
+            <div class="octa-insta-head">
+                <div>
+                    <span class="eyebrow"><span class="eyebrow-dot"></span> Instagram</span>
+                    <h2 id="insta-title">Follow Kami di <em>Instagram</em></h2>
+                </div>
+                <a class="octa-insta-btn" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>
+                    @octabeauty
+                </a>
+            </div>
+            <div class="octa-insta-grid">
+                @foreach ($instaPosts as $post)
+                    <a class="octa-insta-item" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+                        <img src="{{ $post['image'] }}" alt="{{ $post['alt'] }}" loading="lazy">
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <section class="octa-cta" aria-labelledby="cta-title">
+        <div class="container">
+            <div class="octa-cta-card">
+                <div class="octa-cta-inner">
+                    <h2 id="cta-title">Siap Merawat <em>Kulitmu?</em></h2>
+                    <p>Konsultasikan masalah kulitmu secara GRATIS dan temukan kembali rasa percaya dirimu bersama kami.</p>
+                    <div class="octa-cta-actions">
+                        <a class="button button-light" href="{{ route('register') }}">Booking Sekarang</a>
+                        <a class="button octa-cta-wa" href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer">Chat WhatsApp</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 @endsection
