@@ -38,6 +38,7 @@
         (() => {
             const wishlistKey = 'octa.wishlist';
             const treatments = @json($services);
+            const treatmentBookingUrl = @json(url('/booking'));
 
             const readWishlist = () => {
                 try {
@@ -81,7 +82,7 @@
                             <span class="layanan-duration">${clockIcon} ${escapeHtml(service.duration)}</span>
                             <span class="layanan-price">${escapeHtml(service.price)}</span>
                         </div>
-                        <a class="layanan-action${service.primary ? ' is-primary' : ''}" href="#">${escapeHtml(service.action)}</a>
+                        <a class="layanan-action${service.primary ? ' is-primary' : ''}" href="${treatmentBookingUrl}?treatment=${encodeURIComponent(service.slug)}">${escapeHtml(service.action)}</a>
                     </div>
                 </article>
             `;

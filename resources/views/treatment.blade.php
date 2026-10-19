@@ -57,7 +57,7 @@
                                 </span>
                                 <span class="layanan-price">{{ $service['price'] }}</span>
                             </div>
-                            <a class="layanan-action @if ($service['primary']) is-primary @endif" href="#">{{ $service['action'] }}</a>
+                            <a class="layanan-action @if ($service['primary']) is-primary @endif" href="{{ route('booking.create', ['treatment' => $service['slug']]) }}">{{ $service['action'] }}</a>
                         </div>
                     </article>
                 @endforeach
@@ -73,7 +73,7 @@
                         <h2>Belum Tahu Treatment yang Cocok?</h2>
                         <p>Setiap jenis kulit memiliki kebutuhan yang unik. Tim ahli kami siap membantu Anda melakukan analisis kulit menyeluruh untuk menentukan perawatan terbaik yang memberikan hasil maksimal tanpa efek sampling.</p>
                         <div class="treatment-consult-actions">
-                            <a class="button button-pink" href="#">Konsultasi Sekarang <span aria-hidden="true">&rarr;</span></a>
+                            <a class="button button-pink" href="{{ route('booking.create', ['treatment' => 'expert-skin-analysis']) }}">Konsultasi Sekarang <span aria-hidden="true">&rarr;</span></a>
                             <a class="treatment-consult-wa" href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer">Hubungi Lewat WhatsApp</a>
                         </div>
                     </div>

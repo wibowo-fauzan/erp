@@ -90,7 +90,7 @@
                             <p>{{ $item['answer'] }}</p>
                         </div>
                     @endforeach
-                    <a class="contact-questions-more" href="#kontak">Lihat FAQ Selengkapnya <span aria-hidden="true">&rarr;</span></a>
+                    <a class="contact-questions-more" href="{{ route('faq') }}">Lihat FAQ Selengkapnya <span aria-hidden="true">&rarr;</span></a>
                 </article>
             </div>
 

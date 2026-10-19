@@ -14,8 +14,9 @@
         <nav class="desktop-nav" aria-label="Navigasi utama">
             <a href="{{ route('home') }}" aria-current="{{ request()->routeIs('home') ? 'page' : 'false' }}">Beranda</a>
             <a href="{{ route('about') }}" aria-current="{{ request()->routeIs('about') ? 'page' : 'false' }}">Tentang Kami</a>
-            <a href="{{ route('treatment') }}">Layanan</a>
-            <a href="{{ route('home') }}#promo">Promo</a>
+            <a href="{{ route('treatment') }}" aria-current="{{ request()->routeIs('treatment*') ? 'page' : 'false' }}">Layanan</a>
+            <a href="{{ route('promo') }}" aria-current="{{ request()->routeIs('promo*') ? 'page' : 'false' }}">Promo</a>
+            <a href="{{ route('faq') }}" aria-current="{{ request()->routeIs('faq') ? 'page' : 'false' }}">FAQ</a>
             <a href="#kontak">Kontak</a>
             <a class="nav-wishlist" href="{{ route('wishlist') }}" aria-current="{{ request()->routeIs('wishlist') ? 'page' : 'false' }}">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3s-7.5-4.6-7.5-9.6a4.2 4.2 0 0 1 7.5-2.6 4.2 4.2 0 0 1 7.5 2.6c0 5-7.5 9.6-7.5 9.6Z"/></svg>
@@ -26,7 +27,7 @@
 
         <div class="nav-actions">
             <a class="nav-login" href="{{ route('login') }}">Masuk</a>
-            <a class="button button-pink button-small" href="{{ route('register') }}">Booking Sekarang</a>
+            <a class="button button-pink button-small" href="{{ route('booking.create') }}">Booking Sekarang</a>
         </div>
 
         <details class="mobile-menu">
@@ -36,8 +37,9 @@
             <nav id="mobile-navigation" aria-label="Navigasi seluler">
                 <a href="{{ route('home') }}" aria-current="{{ request()->routeIs('home') ? 'page' : 'false' }}">Beranda</a>
                 <a href="{{ route('about') }}">Tentang Kami</a>
-                <a href="{{ route('treatment') }}">Layanan</a>
-                <a href="{{ route('home') }}#promo">Promo</a>
+                <a href="{{ route('treatment') }}" aria-current="{{ request()->routeIs('treatment*') ? 'page' : 'false' }}">Layanan</a>
+                <a href="{{ route('promo') }}" aria-current="{{ request()->routeIs('promo*') ? 'page' : 'false' }}">Promo</a>
+                <a href="{{ route('faq') }}" aria-current="{{ request()->routeIs('faq') ? 'page' : 'false' }}">FAQ</a>
                 <a href="#kontak">Kontak</a>
                 <a class="nav-wishlist" href="{{ route('wishlist') }}">
                     <span class="nav-wishlist-label">
@@ -47,7 +49,7 @@
                     </span>
                 </a>
                 <a href="{{ route('login') }}">Masuk</a>
-                <a class="mobile-menu-cta" href="{{ route('register') }}">Booking Sekarang <span aria-hidden="true">→</span></a>
+                <a class="mobile-menu-cta" href="{{ route('booking.create') }}">Booking Sekarang <span aria-hidden="true">→</span></a>
             </nav>
         </details>
     </div>

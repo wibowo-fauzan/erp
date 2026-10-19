@@ -32,7 +32,8 @@
             <a href="{{ route('home') }}">Beranda</a>
             <a href="{{ route('about') }}">Tentang Kami</a>
             <a href="{{ route('treatment') }}">Layanan</a>
-            <a href="{{ route('home') }}#promo">Promo</a>
+            <a href="{{ route('promo') }}">Promo</a>
+            <a href="{{ route('faq') }}">FAQ</a>
             <a href="#kontak">Hubungi Kami</a>
         </div>
 

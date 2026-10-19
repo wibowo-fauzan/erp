@@ -60,7 +60,7 @@
                 <h1 id="hero-title">Kulit Sehat,<br><em>Cantik Setiap Hari</em></h1>
                 <p class="octa-hero-desc">Wujudkan impian kulit wajah yang cerah, sehat, dan bercahaya bersama para ahli perawatan kami. Perawatan modern yang dirancang khusus untuk kebutuhan unik kulit Anda.</p>
                 <div class="octa-hero-actions">
-                    <a class="button button-pink" href="#">Booking Sekarang</a>
+                    <a class="button button-pink" href="{{ route('booking.create') }}">Booking Sekarang</a>
                     <a class="octa-hero-link" href="#layanan">Lihat Layanan <span class="octa-hero-link-arrow" aria-hidden="true">→</span></a>
                 </div>
             </div>
@@ -120,7 +120,7 @@
                     <h2 id="layanan-title">Layanan <em>Unggulan</em> Kami</h2>
                     <p class="octa-section-desc">Berbagai pilihan treatment yang dirancang untuk memberikan hasil maksimal bagi kesehatan dan keindahan kulit Anda.</p>
                 </div>
-                <a class="octa-link-more" href="#">Lihat Selengkapnya <span aria-hidden="true">→</span></a>
+                <a class="octa-link-more" href="{{ route('treatment') }}">Lihat Selengkapnya <span aria-hidden="true">→</span></a>
             </div>
             <div class="octa-service-grid">
                 @foreach ($services as $service)
@@ -187,7 +187,7 @@
                             <p>{{ $promo['description'] }}</p>
                             <div class="octa-promo-foot">
                                 <span class="octa-promo-price">{{ $promo['price'] }}</span>
-                                <a class="octa-promo-btn" href="#">{{ $promo['action'] }}</a>
+                                <a class="octa-promo-btn" href="{{ route('promo') }}#promo-berjalan">{{ $promo['action'] }}</a>
                             </div>
                         </div>
                     </article>
@@ -216,7 +216,7 @@
                             </li>
                         @endforeach
                     </ul>
-                    <a class="button button-pink" href="#">Booking Treatment Ini</a>
+                    <a class="button button-pink" href="{{ route('booking.create', ['treatment' => 'octa-signature-glow']) }}">Booking Treatment Ini</a>
                 </div>
             </div>
         </div>
@@ -276,7 +276,7 @@
                     <h2 id="cta-title">Siap Merawat <em>Kulitmu?</em></h2>
                     <p>Konsultasikan masalah kulitmu secara GRATIS dan temukan kembali rasa percaya dirimu bersama kami.</p>
                     <div class="octa-cta-actions">
-                        <a class="button button-light" href="#">Booking Sekarang</a>
+                        <a class="button button-light" href="{{ route('booking.create') }}">Booking Sekarang</a>
                         <a class="button octa-cta-wa" href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer">Chat WhatsApp</a>
                     </div>
                 </div>
