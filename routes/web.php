@@ -11,6 +11,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::view('/tentang-kami', 'about')->name('about');
+Route::view('/kontak', 'kontak')->name('kontak');
 Route::view('/treatment', 'treatment')->name('treatment');
 Route::get('/treatment/{slug}', function (string $slug) {
     $treatments = collect(config('treatments'));

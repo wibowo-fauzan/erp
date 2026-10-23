@@ -34,7 +34,7 @@
             <a href="{{ route('treatment') }}">Layanan</a>
             <a href="{{ route('promo') }}">Promo</a>
             <a href="{{ route('faq') }}">FAQ</a>
-            <a href="#kontak">Hubungi Kami</a>
+            <a href="{{ route('kontak') }}">Hubungi Kami</a>
         </div>
 
         <div class="footer-column">

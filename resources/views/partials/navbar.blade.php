@@ -17,7 +17,7 @@
             <a href="{{ route('treatment') }}" aria-current="{{ request()->routeIs('treatment*') ? 'page' : 'false' }}">Layanan</a>
             <a href="{{ route('promo') }}" aria-current="{{ request()->routeIs('promo*') ? 'page' : 'false' }}">Promo</a>
             <a href="{{ route('faq') }}" aria-current="{{ request()->routeIs('faq') ? 'page' : 'false' }}">FAQ</a>
-            <a href="#kontak">Kontak</a>
+                <a href="{{ route('kontak') }}" aria-current="{{ request()->routeIs('kontak') ? 'page' : 'false' }}">Kontak</a>
             <a class="nav-wishlist" href="{{ route('wishlist') }}" aria-current="{{ request()->routeIs('wishlist') ? 'page' : 'false' }}">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3s-7.5-4.6-7.5-9.6a4.2 4.2 0 0 1 7.5-2.6 4.2 4.2 0 0 1 7.5 2.6c0 5-7.5 9.6-7.5 9.6Z"/></svg>
                 Wishlist
@@ -40,7 +40,7 @@
                 <a href="{{ route('treatment') }}" aria-current="{{ request()->routeIs('treatment*') ? 'page' : 'false' }}">Layanan</a>
                 <a href="{{ route('promo') }}" aria-current="{{ request()->routeIs('promo*') ? 'page' : 'false' }}">Promo</a>
                 <a href="{{ route('faq') }}" aria-current="{{ request()->routeIs('faq') ? 'page' : 'false' }}">FAQ</a>
-                <a href="#kontak">Kontak</a>
+            <a href="{{ route('kontak') }}" aria-current="{{ request()->routeIs('kontak') ? 'page' : 'false' }}">Kontak</a>
                 <a class="nav-wishlist" href="{{ route('wishlist') }}">
                     <span class="nav-wishlist-label">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3s-7.5-4.6-7.5-9.6a4.2 4.2 0 0 1 7.5-2.6 4.2 4.2 0 0 1 7.5 2.6c0 5-7.5 9.6-7.5 9.6Z"/></svg>
