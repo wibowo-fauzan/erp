@@ -18,15 +18,36 @@
             <a href="{{ route('promo') }}" aria-current="{{ request()->routeIs('promo*') ? 'page' : 'false' }}">Promo</a>
             <a href="{{ route('faq') }}" aria-current="{{ request()->routeIs('faq') ? 'page' : 'false' }}">FAQ</a>
                 <a href="{{ route('kontak') }}" aria-current="{{ request()->routeIs('kontak') ? 'page' : 'false' }}">Kontak</a>
-            <a class="nav-wishlist" href="{{ route('wishlist') }}" aria-current="{{ request()->routeIs('wishlist') ? 'page' : 'false' }}">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3s-7.5-4.6-7.5-9.6a4.2 4.2 0 0 1 7.5-2.6 4.2 4.2 0 0 1 7.5 2.6c0 5-7.5 9.6-7.5 9.6Z"/></svg>
-                Wishlist
-                <span class="nav-wishlist-count" id="wishlist-count" hidden>0</span>
-            </a>
         </nav>
 
         <div class="nav-actions">
-            <a class="nav-login" href="{{ route('login') }}">Masuk</a>
+            @auth
+                <?php
+                    $avatarUrl = auth()->user()->avatar ? Storage::url(auth()->user()->avatar) : null;
+                    $initial = strtoupper(substr(auth()->user()->name ?? 'U', 0, 1));
+                ?>
+                <details style="display:inline-block;position:relative">
+                    <summary class="nav-login" style="cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px">
+                        @if ($avatarUrl)
+                            <img src="{{ $avatarUrl }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:1px solid #ddd">
+                        @else
+                            <div style="width:32px;height:32px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-weight:700;color:#6b7280;font-size:14px">{{ $initial }}</div>
+                        @endif
+                        <span style="font-size:13px">Akun</span>
+                    </summary>
+                    <div style="position:absolute;right:0;background:#fff;border:1px solid #eee;padding:8px;min-width:170px;z-index:99">
+                        <a href="{{ route('wishlist') }}" style="display:block;padding:8px 10px;text-decoration:none;color:#111;font-size:14px">Wishlist</a>
+                        <a href="{{ route('profile') }}" style="display:block;padding:8px 10px;text-decoration:none;color:#111;font-size:14px">Dashboard User</a>
+                        <a href="{{ route('my-bookings') }}" style="display:block;padding:8px 10px;text-decoration:none;color:#111;font-size:14px">Booking Saya</a>
+                        <form method="POST" action="{{ route('logout') }}" style="margin:0">
+                            @csrf
+                            <button type="submit" style="width:100%;text-align:left;padding:8px 10px;border:none;background:none;cursor:pointer;font-size:14px;color:#111">Logout</button>
+                        </form>
+                    </div>
+                </details>
+            @else
+                <a class="nav-login" href="{{ route('login') }}">Masuk</a>
+            @endauth
             <a class="button button-pink button-small" href="{{ route('booking.create') }}">Booking Sekarang</a>
         </div>
 
@@ -41,13 +62,6 @@
                 <a href="{{ route('promo') }}" aria-current="{{ request()->routeIs('promo*') ? 'page' : 'false' }}">Promo</a>
                 <a href="{{ route('faq') }}" aria-current="{{ request()->routeIs('faq') ? 'page' : 'false' }}">FAQ</a>
             <a href="{{ route('kontak') }}" aria-current="{{ request()->routeIs('kontak') ? 'page' : 'false' }}">Kontak</a>
-                <a class="nav-wishlist" href="{{ route('wishlist') }}">
-                    <span class="nav-wishlist-label">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3s-7.5-4.6-7.5-9.6a4.2 4.2 0 0 1 7.5-2.6 4.2 4.2 0 0 1 7.5 2.6c0 5-7.5 9.6-7.5 9.6Z"/></svg>
-                        Wishlist
-                        <span class="nav-wishlist-count" id="wishlist-count-mobile" hidden>0</span>
-                    </span>
-                </a>
                 <a href="{{ route('login') }}">Masuk</a>
                 <a class="mobile-menu-cta" href="{{ route('booking.create') }}">Booking Sekarang <span aria-hidden="true">→</span></a>
             </nav>

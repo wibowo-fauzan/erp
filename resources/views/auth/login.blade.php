@@ -46,7 +46,7 @@
                     @enderror
                 </div>
 
-                <div class="auth-field">
+                <div class="auth-field password-field">
                     <label for="password">Kata sandi</label>
                     <input
                         id="password"
@@ -57,6 +57,7 @@
                         autocomplete="current-password"
                         required
                     >
+                    <button type="button" class="password-toggle" id="passwordToggle" aria-label="Tampilkan atau sembunyikan kata sandi">👁</button>
                     @error('password')
                         <p class="auth-error">{{ $message }}</p>
                     @enderror
@@ -86,5 +87,21 @@
             <p class="auth-owner"><a href="{{ url('/admin/login') }}">Masuk sebagai owner atau admin</a></p>
         </div>
     </main>
+    <style>
+        .password-field{position:relative}
+        .auth-input{padding-right:40px}
+        .password-toggle{position:absolute;right:20px;top:68%;transform:translateY(-50%);background:white;border-radius:100px;cursor:pointer;display:flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;color:#64748b;font-size:22px;line-height:1}
+        .hidden{display:none}
+    </style>
+    <script>
+        const toggle = document.getElementById('passwordToggle');
+        const input = document.getElementById('password');
+        let shown = false;
+        toggle.addEventListener('click', () => {
+            shown = !shown;
+            input.type = shown ? 'text' : 'password';
+            toggle.textContent = shown ? '🙈' : '👁';
+        });
+    </script>
 </body>
 </html>

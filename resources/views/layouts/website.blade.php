@@ -11,6 +11,15 @@
 <body>
     @include('partials.navbar')
 
+    @auth
+        @if (empty(auth()->user()->phone) || empty(auth()->user()->address))
+            <div style="background:#fef3c7;padding:10px 16px;text-align:center;font-size:14px">
+                Lengkapi data profil Anda (telepon & alamat) sebelum booking.
+                <a href="{{ route('profile') }}" style="color:#16a34a;text-decoration:underline">Lengkapi sekarang</a>
+            </div>
+        @endif
+    @endauth
+
     <main id="main-content">
         @yield('content')
     </main>

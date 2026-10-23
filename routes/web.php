@@ -4,6 +4,9 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\UserLoginController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\MyBookingController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -45,9 +48,24 @@ Route::get('/promo/{slug}', function (string $slug) {
 })->name('promo.show');
 Route::get('/booking', [BookingController::class, 'create'])->name('booking.create');
 Route::post('/booking', [BookingController::class, 'store'])->middleware('throttle:10,1')->name('booking.store');
-Route::get('/booking/{reference}', [BookingController::class, 'show'])->where('reference', 'OCTA-[0-9]{8}-[A-Z0-9]{10}')->name('booking.show');
+Route::post('/booking/{reference}/bukti', [BookingController::class, 'uploadPaymentProof'])->name('booking.proof');
 Route::view('/faq', 'faq')->name('faq');
-Route::view('/wishlist', 'wishlist')->name('wishlist');
+Route::view('/wishlist', 'wishlist')->middleware('auth')->name('wishlist');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profil', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/booking-saya', [MyBookingController::class, 'index'])->name('my-bookings');
+    Route::get('/api/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/api/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+});
+
+Route::post('/logout', function () {
+    auth()->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect()->route('home');
+})->name('logout');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [UserLoginController::class, 'create'])->name('login');

@@ -76,6 +76,7 @@ class BookingController extends Controller
 
         $booking = Booking::query()->create([
             'reference' => $this->newReference(),
+            'user_id' => auth()->id(),
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
@@ -84,6 +85,8 @@ class BookingController extends Controller
             'booking_date' => $validated['booking_date'],
             'booking_time' => $validated['booking_time'],
             'notes' => $validated['notes'] ?? null,
+            'status' => 'menunggu_konfirmasi',
+            'payment_status' => 'menunggu_verifikasi',
         ]);
 
         return redirect()->route('booking.show', $booking->reference);
@@ -102,6 +105,23 @@ class BookingController extends Controller
         return view('booking-confirmation', compact('booking', 'treatment'));
     }
 
+    public function uploadPaymentProof(Request $request, string $reference): RedirectResponse
+    {
+        $booking = Booking::query()->where('reference', $reference)->firstOrFail();
+
+        $validated = $request->validate([
+            'payment_proof' => ['required', 'image', 'max:2048'],
+        ]);
+
+        $path = $request->file('payment_proof')->store('payment-proofs', 'public');
+
+        $booking->update([
+            'payment_proof' => $path,
+            'payment_status' => 'menunggu_verifikasi',
+        ]);
+
+        return redirect()->route('booking.show', $booking->reference)->with('status', 'Bukti pembayaran berhasil diunggah.');
+    }
     private function availableTimes(): array
     {
         return ['09:00', '10:30', '12:00', '13:30', '15:00', '16:30', '18:00'];
