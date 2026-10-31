@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class GoogleAuthController extends Controller
@@ -28,50 +26,45 @@ class GoogleAuthController extends Controller
             ]);
         }
 
-        $user = DB::transaction(function () use ($googleUser, $email): ?User {
-            $user = User::query()
-                ->where('google_id', $googleUser->getId())
-                ->first();
+        $googleId = (string) $googleUser->getId();
 
-            if (! $user) {
-                $user = User::query()->where('email', $email)->first();
-            }
-
-            if ($user) {
-                if ($user->role !== 'user') {
-                    return null;
-                }
-
-                if ($user->google_id && $user->google_id !== (string) $googleUser->getId()) {
-                    return null;
-                }
-
-                $user->google_id = (string) $googleUser->getId();
-                $user->email_verified_at ??= now();
-                $user->save();
-
-                return $user;
-            }
-
-            return User::query()->create([
-                'name' => $googleUser->getName() ?: $email,
-                'email' => $email,
-                'email_verified_at' => now(),
-                'password' => Str::random(48),
-                'google_id' => (string) $googleUser->getId(),
-                'role' => 'user',
-            ]);
-        });
+        $user = User::query()
+            ->where('google_id', $googleId)
+            ->first();
 
         if (! $user) {
-            return redirect()->route('login')->withErrors([
-                'google' => 'Login Google hanya tersedia untuk akun user. Gunakan login admin untuk masuk ke panel.',
-            ]);
+            $user = User::query()->where('email', $email)->first();
         }
 
-        Auth::login($user, remember: true);
-        request()->session()->regenerate();
+        if ($user) {
+            if ($user->role !== 'user') {
+                return redirect()->route('login')->withErrors([
+                    'google' => 'Login Google hanya tersedia untuk akun user. Gunakan login admin untuk masuk ke panel.',
+                ]);
+            }
 
-        return redirect()->route('home');
+            if ($user->google_id && $user->google_id !== $googleId) {
+                return redirect()->route('login')->withErrors([
+                    'google' => 'Login Google hanya tersedia untuk akun user. Gunakan login admin untuk masuk ke panel.',
+                ]);
+            }
+
+            $user->google_id = $googleId;
+            $user->email_verified_at ??= now();
+            $user->save();
+
+            Auth::login($user, remember: true);
+            request()->session()->regenerate();
+
+            return redirect()->route('home');
+        }
+
+        session()->put('google_register', [
+            'google_id' => $googleId,
+            'name' => $googleUser->getName() ?: $email,
+            'email' => $email,
+        ]);
+
+        return redirect()->route('register');
     }
 }

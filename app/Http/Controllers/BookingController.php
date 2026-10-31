@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\TreatmentAvailability;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,14 +14,18 @@ use Illuminate\View\View;
 
 class BookingController extends Controller
 {
-    public function create(Request $request): View
+    public function create(Request $request): View|RedirectResponse
     {
+        if (auth()->check() && (empty(auth()->user()->phone) || empty(auth()->user()->address))) {
+            return redirect()->route('profile')->with('error', 'Lengkapi data profil Anda (telepon & alamat) sebelum booking.');
+        }
+
         $treatments = config('treatments');
         $promotions = config('promotions');
         $selectedTreatment = collect($treatments)->firstWhere('slug', old('treatment_slug', $request->query('treatment')))
             ?? $treatments[0];
         $selectedPromotion = collect($promotions)->firstWhere('slug', old('promotion_slug', $request->query('promo')));
-        $minimumDate = now('Asia/Jakarta')->addDay()->toDateString();
+        $minimumDate = now('Asia/Jakarta')->toDateString();
         $maximumDate = now('Asia/Jakarta')->addMonths(2)->toDateString();
         $selectedDate = old('booking_date', $minimumDate);
         $parsedSelectedDate = is_string($selectedDate) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $selectedDate)
@@ -34,19 +39,28 @@ class BookingController extends Controller
             $selectedDate = $minimumDate;
         }
 
+        $availableDates = $this->getAvailableDatesInRange($minimumDate, $maximumDate);
+        $blockedDates = $this->getBlockedDatesReasons($minimumDate, $maximumDate);
+
         return view('booking', [
             'treatments' => $treatments,
-            'availableTimes' => $this->availableTimes(),
+            'availableTimes' => $this->availableTimes($selectedDate),
             'selectedTreatment' => $selectedTreatment,
             'selectedPromotion' => $selectedPromotion,
             'minimumDate' => $minimumDate,
             'maximumDate' => $maximumDate,
             'selectedDate' => $selectedDate,
+            'availableDates' => $availableDates,
+            'blockedDates' => $blockedDates,
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
+        if (auth()->check() && (empty(auth()->user()->phone) || empty(auth()->user()->address))) {
+            return redirect()->route('profile')->with('error', 'Lengkapi data profil Anda (telepon & alamat) sebelum booking.');
+        }
+
         $treatmentSlugs = collect(config('treatments'))->pluck('slug')->all();
         $promotions = collect(config('promotions'));
         $validated = $request->validate([
@@ -58,7 +72,7 @@ class BookingController extends Controller
             'booking_date' => [
                 'required',
                 'date',
-                'after:' . now('Asia/Jakarta')->toDateString(),
+                'after_or_equal:' . now('Asia/Jakarta')->toDateString(),
                 'before_or_equal:' . now('Asia/Jakarta')->addMonths(2)->toDateString(),
             ],
             'booking_time' => ['required', 'string', Rule::in($this->availableTimes())],
@@ -71,6 +85,12 @@ class BookingController extends Controller
         if ($promotion !== null && $promotion['treatment_slug'] !== $validated['treatment_slug']) {
             throw ValidationException::withMessages([
                 'promotion_slug' => 'Promo ini tidak berlaku untuk treatment yang dipilih.',
+            ]);
+        }
+
+        if ($this->isTimeBlocked($validated['booking_date'], $validated['booking_time'])) {
+            throw ValidationException::withMessages([
+                'booking_time' => 'Waktu yang dipilih tidak tersedia. Silakan pilih jadwal lain.',
             ]);
         }
 
@@ -122,9 +142,179 @@ class BookingController extends Controller
 
         return redirect()->route('booking.show', $booking->reference)->with('status', 'Bukti pembayaran berhasil diunggah.');
     }
-    private function availableTimes(): array
+    private function availableTimes(?string $date = null): array
     {
-        return ['09:00', '10:30', '12:00', '13:30', '15:00', '16:30', '18:00'];
+        $allTimes = ['09:00', '10:30', '12:00', '13:30', '15:00', '16:30', '18:00'];
+
+        if ($date === null) {
+            return $allTimes;
+        }
+
+        $blockedTimes = $this->getBlockedTimesForDate($date);
+
+        return array_values(array_diff($allTimes, $blockedTimes));
+    }
+
+    private function isTimeBlocked(string $date, string $time): bool
+    {
+        $blockedTimes = $this->getBlockedTimesForDate($date);
+
+        return in_array($time, $blockedTimes, true);
+    }
+
+    private function getBlockedTimesForDate(string $date): array
+    {
+        $parsedDate = Carbon::createFromFormat('!Y-m-d', $date);
+        $dayOfWeek = (int) $parsedDate->format('w');
+
+        $allTimes = $this->availableTimes();
+
+        $availabilities = TreatmentAvailability::query()
+            ->where('is_active', true)
+            ->where(function ($query) use ($date, $parsedDate) {
+                $query
+                    ->where('start_date', '<=', $date)
+                    ->where(function ($q) use ($date) {
+                        $q->whereNull('end_date')
+                            ->orWhere('end_date', '>=', $date);
+                    });
+            })
+            ->get();
+
+        // Tidak ada ketersediaan yang mengatur tanggal ini: semua waktu buka (default).
+        if ($availabilities->isEmpty()) {
+            return [];
+        }
+
+        $availableSlots = [];
+
+        foreach ($availabilities as $availability) {
+            // Cek hari untuk recurring
+            if ($availability->type === 'recurring') {
+                if (! in_array($dayOfWeek, $availability->days_of_week ?? [], true)) {
+                    continue;
+                }
+            }
+
+            // Full day = hari ini tidak tersedia (diblokir sepenuhnya)
+            if ($availability->type === 'full_day') {
+                return $allTimes;
+            }
+
+            // Partial day = hanya waktu dalam rentang yang buka
+            if ($availability->start_time && $availability->end_time) {
+                $start = Carbon::parse($availability->start_time);
+                $end = Carbon::parse($availability->end_time);
+
+                foreach ($allTimes as $slot) {
+                    $slotTime = Carbon::createFromFormat('H:i', $slot);
+                    if ($slotTime->gte($start) && $slotTime->lt($end)) {
+                        $availableSlots[] = $slot;
+                    }
+                }
+            }
+        }
+
+        // Blokir semua waktu yang tidak ada dalam slot yang tersedia
+        $availableSlots = array_unique($availableSlots);
+
+        if (empty($availableSlots)) {
+            return $allTimes;
+        }
+
+        return array_values(array_diff($allTimes, $availableSlots));
+    }
+
+    private function getAvailableDatesInRange(string $from, string $to): array
+    {
+        $start = Carbon::createFromFormat('!Y-m-d', $from)->startOfDay();
+        $end = Carbon::createFromFormat('!Y-m-d', $to)->startOfDay();
+
+        $availableDates = [];
+
+        for ($date = $start; $date->lte($end); $date->addDay()) {
+            $dateString = $date->toDateString();
+            if (! empty($this->availableTimes($dateString))) {
+                $availableDates[] = $dateString;
+            }
+        }
+
+        return $availableDates;
+    }
+
+    private function getBlockedDatesReasons(string $from, string $to): array
+    {
+        $start = Carbon::createFromFormat('!Y-m-d', $from)->startOfDay();
+        $end = Carbon::createFromFormat('!Y-m-d', $to)->startOfDay();
+
+        $availabilities = TreatmentAvailability::query()
+            ->where('is_active', true)
+            ->get();
+
+        $blockedDates = [];
+
+        for ($date = $start; $date->lte($end); $date->addDay()) {
+            $dateString = $date->toDateString();
+            $dayOfWeek = (int) $date->format('w');
+
+            $covering = $availabilities->filter(function ($availability) use ($dateString, $dayOfWeek) {
+                $avStart = $availability->start_date instanceof Carbon
+                    ? $availability->start_date->toDateString()
+                    : (string) $availability->start_date;
+                if ($avStart > $dateString) {
+                    return false;
+                }
+
+                $avEnd = $availability->end_date;
+                if ($avEnd !== null) {
+                    $avEndStr = $avEnd instanceof Carbon ? $avEnd->toDateString() : (string) $avEnd;
+                    if ($avEndStr < $dateString) {
+                        return false;
+                    }
+                }
+
+                if ($availability->type === 'recurring' && ! in_array($dayOfWeek, $availability->days_of_week ?? [], true)) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            if ($covering->isEmpty()) {
+                continue;
+            }
+
+            // full_day = hari ini tidak tersedia sepenuhnya
+            if ($covering->contains(fn ($a) => $a->type === 'full_day')) {
+                $record = $covering->first(fn ($a) => $a->type === 'full_day');
+                $blockedDates[$dateString] = [
+                    'title' => $record->title,
+                    'description' => $record->description,
+                    'type' => 'full_day',
+                    'start_date' => (string) $record->start_date,
+                    'end_date' => $record->end_date ? (string) $record->end_date : null,
+                    'start_time' => $record->start_time,
+                    'end_time' => $record->end_time,
+                ];
+                continue;
+            }
+
+            // partial_day / recurring: diblokir hanya jika tidak ada waktu yang tersedia
+            if (empty($this->availableTimes($dateString))) {
+                $record = $covering->first();
+                $blockedDates[$dateString] = [
+                    'title' => $record->title,
+                    'description' => $record->description,
+                    'type' => $record->type,
+                    'start_date' => (string) $record->start_date,
+                    'end_date' => $record->end_date ? (string) $record->end_date : null,
+                    'start_time' => $record->start_time,
+                    'end_time' => $record->end_time,
+                ];
+            }
+        }
+
+        return $blockedDates;
     }
 
     private function newReference(): string

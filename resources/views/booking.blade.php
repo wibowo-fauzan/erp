@@ -76,6 +76,9 @@
                                 <span>Min</span><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span>
                             </div>
                             <div class="booking-calendar-grid" id="booking-calendar-days" role="group" aria-label="Pilih tanggal booking"></div>
+                            <div class="booking-calendar-legend">
+                                <span class="booking-calendar-legend-dot"></span> Tidak tersedia
+                            </div>
                             <input type="hidden" id="booking-date-input" name="booking_date" value="{{ $selectedDate }}" required>
                             <p class="booking-calendar-selected" id="booking-calendar-selected" aria-live="polite"></p>
                             @error('booking_date')<p class="booking-field-error">{{ $message }}</p>@enderror
@@ -86,7 +89,7 @@
                             <div class="booking-time-grid">
                                 @foreach ($availableTimes as $time)
                                     <label>
-                                        <input type="radio" name="booking_time" value="{{ $time }}" @checked(old('booking_time', $availableTimes[0]) === $time)>
+                                        <input type="radio" name="booking_time" value="{{ $time }}" @checked(old('booking_time', $availableTimes[0] ?? '-') === $time)>
                                         <span>{{ $time }}</span>
                                     </label>
                                 @endforeach
@@ -144,7 +147,7 @@
                     <h2 id="booking-summary-title">Detail Reservasi</h2>
                     <dl>
                         <div><dt>Treatment</dt><dd id="booking-summary-treatment">{{ $selectedTreatment['title'] }}</dd></div>
-                        <div><dt>Tanggal &amp; Jam</dt><dd id="booking-summary-date">{{ \Illuminate\Support\Carbon::parse($selectedDate)->translatedFormat('D, j M Y') }} · {{ old('booking_time', $availableTimes[0]) }}</dd></div>
+                        <div><dt>Tanggal &amp; Jam</dt><dd id="booking-summary-date">{{ \Illuminate\Support\Carbon::parse($selectedDate)->translatedFormat('D, j M Y') }} · {{ old('booking_time', $availableTimes[0] ?? '-') }}</dd></div>
                         <div><dt>Nama</dt><dd id="booking-summary-name">{{ old('name', 'Lengkapi data diri') }}</dd></div>
                     </dl>
                     <div class="booking-summary-total"><span>Estimasi biaya</span><strong id="booking-summary-price">{{ $selectedTreatment['price'] }}</strong></div>
@@ -162,6 +165,7 @@
 @endsection
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         (() => {
             const dateInput = document.getElementById('booking-date-input');
@@ -175,6 +179,8 @@
             const dayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
             const minimumDate = new Date(`${@json($minimumDate)}T12:00:00`);
             const maximumDate = new Date(`${@json($maximumDate)}T12:00:00`);
+            const availableDates = new Set(@json($availableDates));
+            const blockedDates = @json($blockedDates);
             let visibleMonth = new Date(minimumDate.getFullYear(), minimumDate.getMonth(), 1);
 
             const formatDate = (value) => {
@@ -182,6 +188,32 @@
                 const date = new Date(year, month - 1, day, 12);
 
                 return `${dayNames[date.getDay()]}, ${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+            };
+
+            const showBlockedInfo = (info) => {
+                const startDate = info?.start_date ? formatDate(info.start_date) : '-';
+                const endDate = info?.end_date ? formatDate(info.end_date) : '-';
+                const timeRange = info?.start_time && info?.end_time
+                    ? `${info.start_time} – ${info.end_time}`
+                    : '-';
+                const typeLabel = info?.type === 'full_day' ? 'Hari Penuh'
+                    : info?.type === 'partial_day' ? 'Parcial (Jam Tertentu)'
+                    : info?.type === 'recurring' ? 'Berulang (Setiap Minggu)'
+                    : '-';
+
+                Swal.fire({
+                    title: `<strong>${info?.title || 'Tidak tersedia'}</strong>`,
+                    html: `
+                        <div style="text-align:left; font-size:14px; line-height:1.6">
+                            <p style="margin:4px 0"><strong>Tanggal:</strong> ${startDate}${endDate && endDate !== startDate ? ' s/d ' + endDate : ''}</p>
+                            <p style="margin:4px 0"><strong>Waktu:</strong> ${timeRange}</p>
+                            <p style="margin:4px 0"><strong>Tipe:</strong> ${typeLabel}</p>
+                            <p style="margin:4px 0"><strong>Keterangan:</strong> ${info?.description || 'Tidak ada keterangan.'}</p>
+                        </div>
+                    `,
+                    icon: 'warning',
+                    confirmButtonText: 'Mengerti',
+                });
             };
 
             const renderCalendar = () => {
@@ -205,19 +237,49 @@
                 for (let day = 1; day <= daysInMonth; day += 1) {
                     const value = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                     const button = document.createElement('button');
-                    const isAvailable = value >= minValue && value <= maxValue;
+                    const isInRange = value >= minValue && value <= maxValue;
+                    const isAvailable = isInRange && availableDates.has(value);
+                    const isBlocked = isInRange && (!isAvailable || blockedDates[value]);
+                    const blockedInfo = isBlocked ? blockedDates[value] : null;
+                    let disabledReason = '';
+                    let statusClass = '';
+                    if (!isInRange) {
+                        disabledReason = value < minValue ? 'Tanggal sudah lewat' : 'Di luar jangkauan tanggal tersedia';
+                        statusClass = 'booking-calendar-day-disabled';
+                    } else if (isBlocked) {
+                        disabledReason = blockedInfo?.title || 'Tidak tersedia';
+                        statusClass = 'booking-calendar-day-blocked';
+                    }
                     button.type = 'button';
                     button.textContent = day;
                     button.dataset.date = value;
-                    button.disabled = !isAvailable;
+                    button.dataset.blocked = isBlocked ? '1' : '';
+                    if (blockedInfo) {
+                        button.dataset.blockedTitle = blockedInfo.title ?? '';
+                        button.dataset.blockedDescription = blockedInfo.description ?? '';
+                    }
+                    if (statusClass) {
+                        button.classList.add(statusClass);
+                    } else {
+                        button.disabled = false;
+                    }
                     button.setAttribute('aria-label', formatDate(value));
-                    button.setAttribute('aria-pressed', dateInput.value === value ? 'true' : 'false');
+                    if (disabledReason) {
+                        button.setAttribute('title', disabledReason);
+                    }
 
                     if (dateInput.value === value) {
                         button.classList.add('is-selected');
                     }
 
                     button.addEventListener('click', () => {
+                        if (isBlocked) {
+                            showBlockedInfo(blockedInfo);
+                            return;
+                        }
+                        if (!isInRange) {
+                            return;
+                        }
                         dateInput.value = value;
                         selectedDateLabel.textContent = `Tanggal dipilih: ${formatDate(value)}`;
                         dateSummary.textContent = `${formatDate(value)} · ${document.querySelector('input[name="booking_time"]:checked')?.value || ''}`;
@@ -226,11 +288,10 @@
 
                     calendarDays.append(button);
                 }
-
-                document.getElementById('booking-prev-month').disabled =
-                    year === minimumDate.getFullYear() && month <= minimumDate.getMonth();
-                document.getElementById('booking-next-month').disabled =
-                    year === maximumDate.getFullYear() && month >= maximumDate.getMonth();
+                    document.getElementById('booking-prev-month').disabled =
+                        year === minimumDate.getFullYear() && month <= minimumDate.getMonth();
+                    document.getElementById('booking-next-month').disabled =
+                        year === maximumDate.getFullYear() && month >= maximumDate.getMonth();
             };
 
             const syncSummary = () => {

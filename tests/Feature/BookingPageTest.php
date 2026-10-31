@@ -19,7 +19,7 @@ class BookingPageTest extends TestCase
             ->assertSee('Paket Brightening Glow')
             ->assertSee('Pilih Jadwal')
             ->assertSee('Data Diri')
-            ->assertSee('value="' . now('Asia/Jakarta')->addDay()->toDateString() . '"', false);
+            ->assertSee('value="' . now('Asia/Jakarta')->toDateString() . '"', false);
     }
 
     public function test_customer_can_save_a_booking_and_view_its_confirmation(): void
