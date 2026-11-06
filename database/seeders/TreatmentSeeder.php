@@ -12,23 +12,7 @@ class TreatmentSeeder extends Seeder
 
     public function run(): void
     {
-        $treatments = config('treatments');
-
-        foreach ($treatments as $data) {
-            Treatment::query()->create([
-                'slug' => $data['slug'] ?? null,
-                'name' => $data['title'] ?? null,
-                'filter' => $data['filter'] ?? null,
-                'category' => $data['category'] ?? null,
-                'price' => $data['price'] ?? null,
-                'duration_minutes' => $data['duration'] ?? null,
-                'description' => $data['description'] ?? null,
-                'image' => $data['image'] ?? null,
-                'action' => $data['action'] ?? null,
-                'is_primary' => $data['primary'] ?? false,
-                'alt' => $data['alt'] ?? null,
-                'is_active' => true,
-            ]);
-        }
+        // Data treatment kini dikelola melalui panel admin Filament.
+        // Tidak ada dummy data yang di-seed secara otomatis.
     }
 }

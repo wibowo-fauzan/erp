@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 
 class GoogleAuthController extends Controller
 {
@@ -17,7 +18,11 @@ class GoogleAuthController extends Controller
 
     public function callback(): RedirectResponse
     {
-        $googleUser = Socialite::driver('google')->user();
+        try {
+            $googleUser = Socialite::driver('google')->user();
+        } catch (InvalidStateException) {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+        }
         $email = $googleUser->getEmail();
 
         if (! $email || ! filter_var($email, FILTER_VALIDATE_EMAIL) || ! ($googleUser->user['verified_email'] ?? false)) {

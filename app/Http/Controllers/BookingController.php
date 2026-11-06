@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Treatment;
 use App\Models\TreatmentAvailability;
+use App\Services\MidtransService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,10 +22,22 @@ class BookingController extends Controller
             return redirect()->route('profile')->with('error', 'Lengkapi data profil Anda (telepon & alamat) sebelum booking.');
         }
 
-        $treatments = config('treatments');
+        $treatments = Treatment::query()->where('is_active', true)->get()->map(fn ($t) => [
+            'slug' => $t->slug,
+            'filter' => $t->filter,
+            'category' => $t->category,
+            'title' => $t->name,
+            'description' => $t->description,
+            'duration' => $t->duration_minutes,
+            'price' => $t->price,
+            'action' => $t->action,
+            'primary' => $t->is_primary,
+            'image' => $t->image,
+            'alt' => $t->alt,
+        ])->all();
         $promotions = config('promotions');
         $selectedTreatment = collect($treatments)->firstWhere('slug', old('treatment_slug', $request->query('treatment')))
-            ?? $treatments[0];
+            ?? ($treatments[0] ?? null);
         $selectedPromotion = collect($promotions)->firstWhere('slug', old('promotion_slug', $request->query('promo')));
         $minimumDate = now('Asia/Jakarta')->toDateString();
         $maximumDate = now('Asia/Jakarta')->addMonths(2)->toDateString();
@@ -42,6 +56,8 @@ class BookingController extends Controller
         $availableDates = $this->getAvailableDatesInRange($minimumDate, $maximumDate);
         $blockedDates = $this->getBlockedDatesReasons($minimumDate, $maximumDate);
 
+        $user = auth()->user();
+
         return view('booking', [
             'treatments' => $treatments,
             'availableTimes' => $this->availableTimes($selectedDate),
@@ -52,6 +68,9 @@ class BookingController extends Controller
             'selectedDate' => $selectedDate,
             'availableDates' => $availableDates,
             'blockedDates' => $blockedDates,
+            'userName' => $user?->name ?? '',
+            'userEmail' => $user?->email ?? '',
+            'userPhone' => $user?->phone ?? '',
         ]);
     }
 
@@ -61,7 +80,7 @@ class BookingController extends Controller
             return redirect()->route('profile')->with('error', 'Lengkapi data profil Anda (telepon & alamat) sebelum booking.');
         }
 
-        $treatmentSlugs = collect(config('treatments'))->pluck('slug')->all();
+        $treatmentSlugs = Treatment::query()->where('is_active', true)->pluck('slug')->all();
         $promotions = collect(config('promotions'));
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:120'],
@@ -72,8 +91,8 @@ class BookingController extends Controller
             'booking_date' => [
                 'required',
                 'date',
-                'after_or_equal:' . now('Asia/Jakarta')->toDateString(),
-                'before_or_equal:' . now('Asia/Jakarta')->addMonths(2)->toDateString(),
+                'after_or_equal:'.now('Asia/Jakarta')->toDateString(),
+                'before_or_equal:'.now('Asia/Jakarta')->addMonths(2)->toDateString(),
             ],
             'booking_time' => ['required', 'string', Rule::in($this->availableTimes())],
             'notes' => ['nullable', 'string', 'max:1000'],
@@ -109,6 +128,37 @@ class BookingController extends Controller
             'payment_status' => 'menunggu_verifikasi',
         ]);
 
+        $treatment = Treatment::query()->where('slug', $validated['treatment_slug'])->first();
+        $price = $treatment ? (int) preg_replace('/[^0-9]/', '', $treatment->price ?? '') : 0;
+
+        if ($price <= 0) {
+            throw ValidationException::withMessages([
+                'treatment_slug' => 'Treatment yang dipilih tidak memiliki harga yang valid.',
+            ]);
+        }
+
+        $midtrans = new MidtransService;
+        try {
+            $midtransResult = $midtrans->createTransaction([
+                'order_id' => $booking->reference,
+                'gross_amount' => $price,
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'],
+            ]);
+
+            $booking->update([
+                'midtrans_order_id' => $booking->reference,
+                'midtrans_snap_token' => $midtransResult['snap_token'] ?? null,
+                'midtrans_response' => is_array($midtransResult) ? json_encode($midtransResult) : null,
+            ]);
+
+            session()->flash('snap_token', $midtransResult['snap_token'] ?? null);
+            session()->flash('snap_redirect_url', $midtransResult['redirect_url'] ?? null);
+        } catch (\Throwable $e) {
+            \Log::error('Midtrans createTransaction failed in store: '.$e->getMessage());
+        }
+
         return redirect()->route('booking.show', $booking->reference);
     }
 
@@ -118,11 +168,40 @@ class BookingController extends Controller
             ->where('reference', $reference)
             ->firstOrFail();
 
-        $treatment = collect(config('treatments'))->firstWhere('slug', $booking->treatment_slug);
+        $treatment = Treatment::query()->where('slug', $booking->treatment_slug)->first();
 
         abort_if($treatment === null, 404);
 
-        return view('booking-confirmation', compact('booking', 'treatment'));
+        $snapToken = session('snap_token') ?? $booking->midtrans_snap_token;
+
+        if (empty($snapToken)) {
+            $price = $treatment ? (int) preg_replace('/[^0-9]/', '', $treatment->price ?? '') : 0;
+
+            if ($price > 0) {
+                try {
+                    $midtrans = new MidtransService;
+                    $midtransResult = $midtrans->createTransaction([
+                        'order_id' => $booking->reference,
+                        'gross_amount' => $price,
+                        'name' => $booking->name,
+                        'email' => $booking->email,
+                        'phone' => $booking->phone,
+                    ]);
+
+                    $snapToken = $midtransResult['snap_token'] ?? null;
+
+                    $booking->update([
+                        'midtrans_order_id' => $booking->reference,
+                        'midtrans_snap_token' => $snapToken,
+                        'midtrans_response' => is_array($midtransResult) ? json_encode($midtransResult) : null,
+                    ]);
+                } catch (\Throwable $e) {
+                    \Log::error('Midtrans createTransaction failed in show: '.$e->getMessage());
+                }
+            }
+        }
+
+        return view('booking-confirmation', compact('booking', 'treatment', 'snapToken'));
     }
 
     public function uploadPaymentProof(Request $request, string $reference): RedirectResponse
@@ -142,6 +221,7 @@ class BookingController extends Controller
 
         return redirect()->route('booking.show', $booking->reference)->with('status', 'Bukti pembayaran berhasil diunggah.');
     }
+
     private function availableTimes(?string $date = null): array
     {
         $allTimes = ['09:00', '10:30', '12:00', '13:30', '15:00', '16:30', '18:00'];
@@ -171,7 +251,7 @@ class BookingController extends Controller
 
         $availabilities = TreatmentAvailability::query()
             ->where('is_active', true)
-            ->where(function ($query) use ($date, $parsedDate) {
+            ->where(function ($query) use ($date) {
                 $query
                     ->where('start_date', '<=', $date)
                     ->where(function ($q) use ($date) {
@@ -296,6 +376,7 @@ class BookingController extends Controller
                     'start_time' => $record->start_time,
                     'end_time' => $record->end_time,
                 ];
+
                 continue;
             }
 
@@ -320,7 +401,7 @@ class BookingController extends Controller
     private function newReference(): string
     {
         do {
-            $reference = 'OCTA-' . now('Asia/Jakarta')->format('Ymd') . '-' . Str::upper(Str::random(10));
+            $reference = 'OCTA-'.now('Asia/Jakarta')->format('Ymd').'-'.Str::upper(Str::random(10));
         } while (Booking::query()->where('reference', $reference)->exists());
 
         return $reference;

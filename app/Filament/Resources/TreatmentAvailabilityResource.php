@@ -13,6 +13,8 @@ class TreatmentAvailabilityResource extends Resource
 {
     protected static ?string $model = TreatmentAvailability::class;
 
+    protected static ?string $navigationGroup = 'Jadwal';
+
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
     protected static ?string $navigationLabel = 'Jadwal Tersedia';
@@ -21,27 +23,36 @@ class TreatmentAvailabilityResource extends Resource
 
     protected static ?string $slug = 'availability';
 
+    public static function canAccess(): bool
+    {
+        return auth()->check() && auth()->user()->role === 'admin';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Pengaturan Ketersediaan')
+                Forms\Components\Section::make('Pengaturan Jadwal Pelayanan')
+                    ->description('Atur ketersediaan jadwal treatment agar pelanggan dapat booking.')
                     ->schema([
                         Forms\Components\TextInput::make('title')
-                            ->label('Judul')
+                            ->label('Judul Jadwal')
+                            ->helperText('Contoh: Libur Nasional, Owner Sibuk, Jam Operasional Khusus')
                             ->required()
                             ->maxLength(255)
                             ->placeholder('Contoh: Libur Nasional, Owner Sibuk, dll'),
 
                         Forms\Components\Textarea::make('description')
                             ->label('Keterangan')
+                            ->helperText('Keterangan tambahan tentang jadwal ini')
                             ->maxLength(1000)
                             ->columnSpanFull(),
 
                         Forms\Components\Select::make('type')
-                            ->label('Tipe')
+                            ->label('Tipe Jadwal')
+                            ->helperText('Pilih jenis ketersediaan jadwal')
                             ->options([
-                                'full_day' => 'Hari Penuh',
+                                'full_day' => 'Hari Penuh (Libur)',
                                 'partial_day' => 'Parcial (Jam Tertentu)',
                                 'recurring' => 'Berulang (Setiap Minggu)',
                             ])
@@ -50,17 +61,21 @@ class TreatmentAvailabilityResource extends Resource
 
                         Forms\Components\DatePicker::make('start_date')
                             ->label('Tanggal Mulai')
+                            ->helperText('Tanggal jadwal mulai berlaku')
                             ->required(),
 
                         Forms\Components\DatePicker::make('end_date')
-                            ->label('Tanggal Selesai'),
+                            ->label('Tanggal Selesai')
+                            ->helperText('Tanggal jadwal selesai (kosongkan jika hanya satu hari)'),
 
                         Forms\Components\TimePicker::make('start_time')
                             ->label('Waktu Mulai')
+                            ->helperText('Jam mulai pelayanan')
                             ->withoutSeconds(),
 
                         Forms\Components\TimePicker::make('end_time')
                             ->label('Waktu Selesai')
+                            ->helperText('Jam selesai pelayanan')
                             ->withoutSeconds(),
 
                         Forms\Components\CheckboxList::make('days_of_week')
@@ -139,11 +154,16 @@ class TreatmentAvailabilityResource extends Resource
                     ->label('Aktif'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Ubah')
+                    ->icon('heroicon-m-pencil'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Hapus')
+                    ->icon('heroicon-m-trash'),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->label('Hapus Dipilih'),
             ]);
     }
 

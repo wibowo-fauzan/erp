@@ -10,7 +10,14 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class Dashboard extends BaseDashboard
 {
+    protected static ?string $navigationGroup = 'Laporan & Profil';
+
     protected static ?string $navigationIcon = 'heroicon-o-home';
+
+    public static function canView(): bool
+    {
+        return auth()->check() && in_array(auth()->user()->role, ['admin', 'owner'], true);
+    }
 
     protected function getHeaderWidgets(): array
     {

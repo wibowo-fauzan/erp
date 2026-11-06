@@ -1,7 +1,3 @@
-@php
-    $services = config('treatments');
-@endphp
-
 @extends('layouts.website')
 
 @section('meta_title', 'Wishlist | Octa Beauty Care')

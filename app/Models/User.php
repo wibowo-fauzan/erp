@@ -25,6 +25,7 @@ class User extends Authenticatable implements FilamentUser
         'email',
         'password',
         'role',
+        'is_active',
         'google_id',
         'phone',
         'address',
@@ -51,11 +52,12 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return in_array($this->role, ['owner', 'admin'], true);
+        return $this->is_active && in_array($this->role, ['owner', 'admin'], true);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
+use App\Models\Treatment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -12,7 +14,7 @@ class ProfileController extends Controller
     public function index(): View
     {
         $bookings = \App\Models\Booking::query()->where('user_id', auth()->id())->latest()->get();
-        $treatments = collect(config('treatments'))->keyBy('slug');
+        $treatments = Treatment::query()->where('is_active', true)->get()->keyBy('slug');
         return view('profile', compact('bookings', 'treatments'));
     }
 

@@ -12,10 +12,6 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        $this->call([
-            TreatmentSeeder::class,
-        ]);
-
         User::factory()->create([
             'name' => 'Admin Octa',
             'email' => 'admin@octabeautycare.com',

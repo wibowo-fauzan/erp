@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Treatment;
 use Illuminate\View\View;
 
 class MyBookingController extends Controller
@@ -14,7 +15,7 @@ class MyBookingController extends Controller
             ->latest()
             ->get();
 
-        $treatments = collect(config('treatments'))->keyBy('slug');
+        $treatments = Treatment::query()->where('is_active', true)->get()->keyBy('slug');
 
         return view('my-bookings', compact('bookings', 'treatments'));
     }

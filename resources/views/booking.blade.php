@@ -106,17 +106,17 @@
                     <div class="booking-customer-grid">
                         <div class="booking-field">
                             <label for="booking-name">Nama Lengkap</label>
-                            <input id="booking-name" name="name" type="text" value="{{ old('name') }}" autocomplete="name" maxlength="120" placeholder="Nama sesuai identitas" required>
+                            <input id="booking-name" name="name" type="text" value="{{ old('name', $userName ?? '') }}" autocomplete="name" maxlength="120" placeholder="Nama sesuai identitas" required>
                             @error('name')<p class="booking-field-error">{{ $message }}</p>@enderror
                         </div>
                         <div class="booking-field">
                             <label for="booking-phone">Nomor WhatsApp</label>
-                            <input id="booking-phone" name="phone" type="tel" value="{{ old('phone') }}" autocomplete="tel" maxlength="30" placeholder="08xxxxxxxxxx" required>
+                            <input id="booking-phone" name="phone" type="tel" value="{{ old('phone', $userPhone ?? '') }}" autocomplete="tel" maxlength="30" placeholder="08xxxxxxxxxx" required>
                             @error('phone')<p class="booking-field-error">{{ $message }}</p>@enderror
                         </div>
                         <div class="booking-field booking-field-full">
                             <label for="booking-email">Email</label>
-                            <input id="booking-email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" maxlength="255" placeholder="nama@email.com" required>
+                            <input id="booking-email" name="email" type="email" value="{{ old('email', $userEmail ?? '') }}" autocomplete="email" maxlength="255" placeholder="nama@email.com" required>
                             @error('email')<p class="booking-field-error">{{ $message }}</p>@enderror
                         </div>
                         <div class="booking-field booking-field-full">
@@ -148,7 +148,7 @@
                     <dl>
                         <div><dt>Treatment</dt><dd id="booking-summary-treatment">{{ $selectedTreatment['title'] }}</dd></div>
                         <div><dt>Tanggal &amp; Jam</dt><dd id="booking-summary-date">{{ \Illuminate\Support\Carbon::parse($selectedDate)->translatedFormat('D, j M Y') }} · {{ old('booking_time', $availableTimes[0] ?? '-') }}</dd></div>
-                        <div><dt>Nama</dt><dd id="booking-summary-name">{{ old('name', 'Lengkapi data diri') }}</dd></div>
+                        <div><dt>Nama</dt><dd id="booking-summary-name">{{ old('name', $userName ?? 'Lengkapi data diri') }}</dd></div>
                     </dl>
                     <div class="booking-summary-total"><span>Estimasi biaya</span><strong id="booking-summary-price">{{ $selectedTreatment['price'] }}</strong></div>
                     <button class="button button-pink booking-submit" type="submit" form="booking-form">Konfirmasi Booking <span aria-hidden="true">→</span></button>
