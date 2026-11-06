@@ -24,7 +24,7 @@ class Pembayaran extends Page
 
     public static function canView(): bool
     {
-        return auth()->check() && auth()->user()->role === 'admin';
+        return auth()->check() && in_array(auth()->user()->role, ['admin', 'owner'], true);
     }
 
     public function mount(): void

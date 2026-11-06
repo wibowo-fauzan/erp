@@ -12,7 +12,30 @@ use App\Models\Treatment;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('beranda');
+    $services = App\Models\Treatment::query()
+        ->where('is_active', true)
+        ->get()
+        ->map(fn ($t) => [
+            'name' => $t->name,
+            'description' => $t->description,
+            'image' => $t->image ?: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=700&q=85',
+            'alt' => $t->alt ?: $t->name,
+        ]);
+
+    $promotions = App\Models\Promotion::query()
+        ->where('is_active', true)
+        ->get()
+        ->map(fn ($p) => [
+            'flag' => $p->eyebrow ?: 'Promo',
+            'title' => $p->name,
+            'description' => $p->description,
+            'price' => $p->discount ?: 'Lihat Detail',
+            'action' => 'Lihat Promo',
+            'image' => $p->image ?: 'https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=800&q=85',
+            'alt' => $p->alt ?: $p->name,
+        ]);
+
+    return view('beranda', compact('services', 'promotions'));
 })->name('home');
 
 Route::view('/tentang-kami', 'about')->name('about');
@@ -62,7 +85,7 @@ Route::get('/treatment/{slug}', function (string $slug) {
     $relatedTreatments = Treatment::query()
         ->where('is_active', true)
         ->where('slug', '!=', $slug)
-        ->orderByRaw("filter = '{$treatment['filter']}' DESC")
+        ->orderByRaw("filter = ? DESC", [$treatment['filter']])
         ->take(3)
         ->get()
         ->map(fn ($t) => [
@@ -82,10 +105,17 @@ Route::get('/treatment/{slug}', function (string $slug) {
     return view('treatment-detail', compact('treatment', 'details', 'relatedTreatments'));
 })->name('treatment.show');
 Route::get('/promo', function () {
-    return view('promo', ['activePromotions' => config('promotions')]);
+    $activePromotions = App\Models\Promotion::query()
+        ->where('is_active', true)
+        ->get()
+        ->map(fn ($p) => $p->toArray());
+    return view('promo', ['activePromotions' => $activePromotions]);
 })->name('promo');
 Route::get('/promo/{slug}', function (string $slug) {
-    $promotions = collect(config('promotions'));
+    $promotions = App\Models\Promotion::query()
+        ->where('is_active', true)
+        ->get()
+        ->map(fn ($p) => $p->toArray());
     $promotion = $promotions->firstWhere('slug', $slug);
 
     abort_if($promotion === null, 404);

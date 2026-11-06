@@ -38,6 +38,13 @@
                     </div>
                 @endif
 
+                @if (count($treatments) === 0)
+                    <div class="booking-errors" role="alert">
+                        <strong>Belum ada layanan treatment tersedia.</strong>
+                        <p>Silakan hubungi administrator untuk menambahkan treatment melalui panel admin.</p>
+                    </div>
+                @endif
+
                 <section class="booking-panel" aria-labelledby="booking-treatment-title">
                     <div class="booking-panel-heading">
                         <div><span>01</span><h2 id="booking-treatment-title">Pilih Treatment</h2></div>
@@ -46,7 +53,7 @@
                     <div class="booking-treatment-grid">
                         @foreach ($treatments as $treatment)
                             <label class="booking-treatment-option">
-                                <input type="radio" name="treatment_slug" value="{{ $treatment['slug'] }}" data-title="{{ $treatment['title'] }}" data-price="{{ $treatment['price'] }}" @checked(old('treatment_slug', $selectedTreatment['slug']) === $treatment['slug'])>
+                                 <input type="radio" name="treatment_slug" value="{{ $treatment['slug'] }}" data-title="{{ $treatment['title'] }}" data-price="{{ $treatment['price'] }}" @checked(old('treatment_slug', $selectedTreatment['slug'] ?? null) === $treatment['slug'])>
                                 <span class="booking-treatment-card">
                                     <span class="booking-treatment-image"><img src="{{ $treatment['image'] }}" alt="" loading="lazy"></span>
                                     <span class="booking-treatment-info">
@@ -146,12 +153,12 @@
                     <span class="booking-summary-kicker">Ringkasan Booking</span>
                     <h2 id="booking-summary-title">Detail Reservasi</h2>
                     <dl>
-                        <div><dt>Treatment</dt><dd id="booking-summary-treatment">{{ $selectedTreatment['title'] }}</dd></div>
+                        <div><dt>Treatment</dt><dd id="booking-summary-treatment">{{ $selectedTreatment['title'] ?? '-' }}</dd></div>
                         <div><dt>Tanggal &amp; Jam</dt><dd id="booking-summary-date">{{ \Illuminate\Support\Carbon::parse($selectedDate)->translatedFormat('D, j M Y') }} · {{ old('booking_time', $availableTimes[0] ?? '-') }}</dd></div>
                         <div><dt>Nama</dt><dd id="booking-summary-name">{{ old('name', $userName ?? 'Lengkapi data diri') }}</dd></div>
                     </dl>
-                    <div class="booking-summary-total"><span>Estimasi biaya</span><strong id="booking-summary-price">{{ $selectedTreatment['price'] }}</strong></div>
-                    <button class="button button-pink booking-submit" type="submit" form="booking-form">Konfirmasi Booking <span aria-hidden="true">→</span></button>
+                    <div class="booking-summary-total"><span>Estimasi biaya</span><strong id="booking-summary-price">{{ $selectedTreatment['price'] ?? '-' }}</strong></div>
+                    <button class="button button-pink booking-submit" type="submit" form="booking-form" {{ count($treatments) === 0 || !$selectedTreatment ? 'disabled' : '' }}>Konfirmasi Booking <span aria-hidden="true">→</span></button>
                     <p class="booking-summary-note">Tim kami akan menghubungi kamu untuk konfirmasi ketersediaan jadwal.</p>
                 </section>
                 <div class="booking-help-card">

@@ -25,5 +25,16 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
             'role' => 'owner',
         ]);
+
+        User::factory()->create([
+            'name' => 'Pelanggan Octa',
+            'email' => 'pelanggan@octabeautycare.com',
+            'password' => bcrypt('password'),
+            'role' => 'user',
+        ]);
+
+        $this->call([
+            TreatmentSeeder::class,
+        ]);
     }
 }

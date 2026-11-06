@@ -5,24 +5,11 @@
         ['label' => 'Hasil Optimal', 'description' => 'Teknologi modern & produk klinis', 'icon' => 'star'],
     ];
 
-    $services = [
-        ['name' => 'Facial Treatments', 'description' => 'Perawatan mendalam untuk kulit segar, cerah, dan sehat setiap hari.', 'image' => 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=700&q=85', 'alt' => 'Perawatan facial mendalam'],
-        ['name' => 'Acne Care', 'description' => 'Solusi efektif untuk mengatasi jerawat dan mencegah bekasnya.', 'image' => 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=700&q=85', 'alt' => 'Produk perawatan jerawat'],
-        ['name' => 'Brightening', 'description' => 'Mencerahkan kulit kusam dan meratakan warna wajah secara bertahap.', 'image' => 'https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=700&q=85', 'alt' => 'Produk pencerah kulit'],
-        ['name' => 'Anti Aging', 'description' => 'Menunda tanda penuaan dan menjaga kekenyalan kulit Anda.', 'image' => 'https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?auto=format&fit=crop&w=700&q=85', 'alt' => 'Perawatan anti aging'],
-    ];
-
     $reasons = [
         ['title' => 'Konsultasi Personal', 'description' => 'Setiap treatment dimulai dengan analisis mendalam kondisi kulit Anda bersama dokter kami.'],
         ['title' => 'Produk Berkualitas', 'description' => 'Kami hanya menggunakan produk premium yang sudah teruji klinis dan aman untuk kulit.'],
         ['title' => 'Teknologi Modern', 'description' => 'Dilengkapi dengan alat estetika bertaraf internasional untuk hasil yang cepat dan tepat.'],
         ['title' => 'Harga Terjangkau', 'description' => 'Kualitas premium kini bisa dinikmati oleh siapa saja dengan harga yang kompetitif.'],
-    ];
-
-    $promotions = [
-        ['flag' => 'Paket Hemat', 'title' => 'Paket Glow Brightening', 'description' => 'Nikmati kombinasi facial dan masker pencerah untuk kulit cerah instan.', 'price' => 'Mulai Rp 199.000', 'action' => 'Ambil Promo', 'image' => 'https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=800&q=85', 'alt' => 'Rangkaian produk skincare pencerah'],
-        ['flag' => 'Kuota Terbatas', 'title' => 'First Visit Discount', 'description' => 'Diskon 30% untuk kunjungan pertama Anda untuk treatment apapun.', 'price' => 'Diskon 30%', 'action' => 'Klaim Sekarang', 'image' => 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=800&q=85', 'alt' => 'Ruang perawatan untuk kunjungan pertama'],
-        ['flag' => 'Momen Berdua', 'title' => 'BFF Beauty Day', 'description' => 'Ajak sahabatmu dan nikmati treatment berdua dengan harga spesial.', 'price' => 'Paket Rp 399.000', 'action' => 'Ajak Teman', 'image' => 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=85', 'alt' => 'Treatment berdua di ruang relaksasi'],
     ];
 
     $benefits = [

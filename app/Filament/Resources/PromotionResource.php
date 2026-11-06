@@ -47,10 +47,22 @@ class PromotionResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->maxLength(50),
 
+                        Forms\Components\TextInput::make('slug')
+                            ->label('Slug (URL)')
+                            ->helperText('Contoh: first-visit-special')
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->maxLength(255),
+
                         Forms\Components\TextInput::make('name')
                             ->label('Nama Promo')
                             ->helperText('Contoh: Diskon 20%, Promo Hemat')
                             ->required()
+                            ->maxLength(255),
+
+                        Forms\Components\TextInput::make('eyebrow')
+                            ->label('Eyebrow / Kategori')
+                            ->helperText('Contoh: PROMO MEMBER BARU')
                             ->maxLength(255),
 
                         Forms\Components\Textarea::make('description')
@@ -59,12 +71,10 @@ class PromotionResource extends Resource
                             ->maxLength(1000)
                             ->columnSpanFull(),
 
-                        Forms\Components\Select::make('treatment_slug')
-                            ->label('Treatment')
-                            ->helperText('Pilih treatment yang Berlaku (kosongkan untuk semua treatment)')
-                            ->options(fn () => \App\Models\Treatment::query()->where('is_active', true)->pluck('name', 'slug'))
-                            ->searchable()
-                            ->preload(),
+                        Forms\Components\TextInput::make('discount')
+                            ->label('Teks Diskon (Tampilan)')
+                            ->helperText('Contoh: 20%, Rp100rb')
+                            ->maxLength(50),
 
                         Forms\Components\TextInput::make('discount_amount')
                             ->label('Nominal Diskon (Rp)')
@@ -86,12 +96,67 @@ class PromotionResource extends Resource
                             "))
                             ->required(),
 
+                        Forms\Components\Select::make('treatment_slug')
+                            ->label('Treatment')
+                            ->helperText('Pilih treatment yang Berlaku (kosongkan untuk semua treatment)')
+                            ->options(fn () => \App\Models\Treatment::query()->where('is_active', true)->pluck('name', 'slug'))
+                            ->searchable()
+                            ->preload()
+                            ->nullable(),
+
+                        Forms\Components\TextInput::make('validity')
+                            ->label('Keterangan Berlaku')
+                            ->helperText('Contoh: Berlaku untuk kunjungan pertama')
+                            ->maxLength(255),
+
+                        Forms\Components\TextInput::make('minimum')
+                            ->label('Syarat Minimum')
+                            ->helperText('Contoh: Untuk semua treatment')
+                            ->maxLength(255),
+
                         Forms\Components\DatePicker::make('start_date')
                             ->label('Tanggal Mulai Berlaku')
                             ->required(),
 
                         Forms\Components\DatePicker::make('end_date')
                             ->label('Tanggal Selesai Berlaku'),
+
+                        Forms\Components\TextInput::make('date')
+                            ->label('Tanggal Tampilan')
+                            ->helperText('Contoh: 01 Okt - 31 Okt 2026')
+                            ->maxLength(255),
+
+                        Forms\Components\TextInput::make('detail_title')
+                            ->label('Judul Detail')
+                            ->helperText('Contoh: Diskon 20% Facial Treatment')
+                            ->maxLength(255),
+
+                        Forms\Components\Textarea::make('detail_description')
+                            ->label('Deskripsi Detail')
+                            ->helperText('Deskripsi panjang untuk halaman detail promo')
+                            ->maxLength(2000)
+                            ->columnSpanFull(),
+
+                        Forms\Components\FileUpload::make('image')
+                            ->label('Gambar Promo')
+                            ->image()
+                            ->directory('promotions')
+                            ->helperText('Upload gambar promo'),
+
+                        Forms\Components\TextInput::make('alt')
+                            ->label('Alt Text Gambar')
+                            ->helperText('Deskripsi gambar untuk aksesibilitas')
+                            ->maxLength(255),
+
+                        Forms\Components\Select::make('style')
+                            ->label('Gaya Tampilan')
+                            ->helperText('Contoh: light, dark, compact')
+                            ->options([
+                                'light' => 'Light',
+                                'dark' => 'Dark',
+                                'compact' => 'Compact',
+                            ])
+                            ->default('light'),
 
                         Forms\Components\Toggle::make('is_active')
                             ->label('Aktif')
@@ -114,6 +179,17 @@ class PromotionResource extends Resource
                     ->label('Nama Promo')
                     ->searchable()
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('slug')
+                    ->label('Slug')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('style')
+                    ->label('Gaya')
+                    ->badge(),
+
+                Tables\Columns\TextColumn::make('discount')
+                    ->label('Diskon (Tampilan)'),
 
                 Tables\Columns\TextColumn::make('description')
                     ->label('Deskripsi')

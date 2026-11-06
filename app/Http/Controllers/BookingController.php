@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Promotion;
 use App\Models\Treatment;
 use App\Models\TreatmentAvailability;
 use App\Services\MidtransService;
@@ -81,7 +82,10 @@ class BookingController extends Controller
         }
 
         $treatmentSlugs = Treatment::query()->where('is_active', true)->pluck('slug')->all();
-        $promotions = collect(config('promotions'));
+        $promotions = Promotion::query()
+            ->where('is_active', true)
+            ->get()
+            ->map(fn ($p) => $p->toArray());
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:120'],
             'email' => ['required', 'email', 'max:255'],
@@ -129,7 +133,7 @@ class BookingController extends Controller
         ]);
 
         $treatment = Treatment::query()->where('slug', $validated['treatment_slug'])->first();
-        $price = $treatment ? (int) preg_replace('/[^0-9]/', '', $treatment->price ?? '') : 0;
+        $price = $treatment ? (int) (float) $treatment->price : 0;
 
         if ($price <= 0) {
             throw ValidationException::withMessages([
@@ -157,6 +161,7 @@ class BookingController extends Controller
             session()->flash('snap_redirect_url', $midtransResult['redirect_url'] ?? null);
         } catch (\Throwable $e) {
             \Log::error('Midtrans createTransaction failed in store: '.$e->getMessage());
+            session()->flash('error', 'Sistem pembayaran sedang mengalami gangguan. Tim kami akan menghubungi Anda untuk konfirmasi pembayaran.');
         }
 
         return redirect()->route('booking.show', $booking->reference);
@@ -175,7 +180,7 @@ class BookingController extends Controller
         $snapToken = session('snap_token') ?? $booking->midtrans_snap_token;
 
         if (empty($snapToken)) {
-            $price = $treatment ? (int) preg_replace('/[^0-9]/', '', $treatment->price ?? '') : 0;
+        $price = $treatment ? (int) (float) $treatment->price : 0;
 
             if ($price > 0) {
                 try {
@@ -197,6 +202,7 @@ class BookingController extends Controller
                     ]);
                 } catch (\Throwable $e) {
                     \Log::error('Midtrans createTransaction failed in show: '.$e->getMessage());
+                    session()->flash('error', 'Sistem pembayaran sedang mengalami gangguan. Tim kami akan menghubungi Anda untuk konfirmasi pembayaran.');
                 }
             }
         }

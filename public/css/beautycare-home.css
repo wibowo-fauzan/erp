@@ -637,8 +637,8 @@ h1 em, h2 em { color: var(--pink); font-weight: 500; }
 .octa-strip-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
 .octa-strip-item { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 30px 18px; }
 .octa-strip-item + .octa-strip-item { border-left: 1px solid var(--line); }
-.octa-strip-icon { display: grid; width: 48px; height: 48px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: var(--pink-pale); color: var(--pink); }
-.octa-strip-icon svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.octa-strip-icon { position: relative; width: 48px; height: 48px; flex: 0 0 auto; border-radius: 50%; background: var(--pink-pale); color: var(--pink); }
+.octa-strip-icon svg { position: absolute; top: 50%; left: 50%; width: 23px; height: 23px; transform: translate(-50%, -50%); fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
 .octa-strip-icon .octa-solid { fill: currentColor; stroke: none; }
 .octa-strip-item strong { display: block; font-size: 17px; }
 .octa-strip-item span { display: block; margin-top: 3px; color: var(--muted); font-size: 15px; }

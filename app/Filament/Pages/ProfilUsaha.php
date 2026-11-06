@@ -24,7 +24,7 @@ class ProfilUsaha extends Page implements HasForms
 
     public static function canView(): bool
     {
-        return auth()->check() && auth()->user()->role === 'admin';
+        return auth()->check() && in_array(auth()->user()->role, ['admin', 'owner'], true);
     }
 
     public function mount(): void
@@ -100,9 +100,9 @@ class ProfilUsaha extends Page implements HasForms
     {
         $data = $this->form->getState();
 
-        if (isset($data['gambar'])) {
-            $data['gambar'] = $data['gambar'];
-        }
+        unset($data['gambar']);
+
+        Storage::disk('public')->put('business-profile.json', json_encode($data, JSON_PRETTY_PRINT));
 
         \Filament\Notifications\Notification::make()
             ->title('Profil usaha berhasil diperbarui')

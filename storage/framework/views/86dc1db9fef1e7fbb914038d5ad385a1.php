@@ -38,6 +38,13 @@
                     </div>
                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(count($treatments) === 0): ?>
+                    <div class="booking-errors" role="alert">
+                        <strong>Belum ada layanan treatment tersedia.</strong>
+                        <p>Silakan hubungi administrator untuk menambahkan treatment melalui panel admin.</p>
+                    </div>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
                 <section class="booking-panel" aria-labelledby="booking-treatment-title">
                     <div class="booking-panel-heading">
                         <div><span>01</span><h2 id="booking-treatment-title">Pilih Treatment</h2></div>
@@ -46,7 +53,7 @@
                     <div class="booking-treatment-grid">
                         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $treatments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $treatment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <label class="booking-treatment-option">
-                                <input type="radio" name="treatment_slug" value="<?php echo e($treatment['slug']); ?>" data-title="<?php echo e($treatment['title']); ?>" data-price="<?php echo e($treatment['price']); ?>" <?php if(old('treatment_slug', $selectedTreatment['slug']) === $treatment['slug']): echo 'checked'; endif; ?>>
+                                 <input type="radio" name="treatment_slug" value="<?php echo e($treatment['slug']); ?>" data-title="<?php echo e($treatment['title']); ?>" data-price="<?php echo e($treatment['price']); ?>" <?php if(old('treatment_slug', $selectedTreatment['slug'] ?? null) === $treatment['slug']): echo 'checked'; endif; ?>>
                                 <span class="booking-treatment-card">
                                     <span class="booking-treatment-image"><img src="<?php echo e($treatment['image']); ?>" alt="" loading="lazy"></span>
                                     <span class="booking-treatment-info">
@@ -202,12 +209,12 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                     <span class="booking-summary-kicker">Ringkasan Booking</span>
                     <h2 id="booking-summary-title">Detail Reservasi</h2>
                     <dl>
-                        <div><dt>Treatment</dt><dd id="booking-summary-treatment"><?php echo e($selectedTreatment['title']); ?></dd></div>
+                        <div><dt>Treatment</dt><dd id="booking-summary-treatment"><?php echo e($selectedTreatment['title'] ?? '-'); ?></dd></div>
                         <div><dt>Tanggal &amp; Jam</dt><dd id="booking-summary-date"><?php echo e(\Illuminate\Support\Carbon::parse($selectedDate)->translatedFormat('D, j M Y')); ?> · <?php echo e(old('booking_time', $availableTimes[0] ?? '-')); ?></dd></div>
                         <div><dt>Nama</dt><dd id="booking-summary-name"><?php echo e(old('name', $userName ?? 'Lengkapi data diri')); ?></dd></div>
                     </dl>
-                    <div class="booking-summary-total"><span>Estimasi biaya</span><strong id="booking-summary-price"><?php echo e($selectedTreatment['price']); ?></strong></div>
-                    <button class="button button-pink booking-submit" type="submit" form="booking-form">Konfirmasi Booking <span aria-hidden="true">→</span></button>
+                    <div class="booking-summary-total"><span>Estimasi biaya</span><strong id="booking-summary-price"><?php echo e($selectedTreatment['price'] ?? '-'); ?></strong></div>
+                    <button class="button button-pink booking-submit" type="submit" form="booking-form" <?php echo e(count($treatments) === 0 || !$selectedTreatment ? 'disabled' : ''); ?>>Konfirmasi Booking <span aria-hidden="true">→</span></button>
                     <p class="booking-summary-note">Tim kami akan menghubungi kamu untuk konfirmasi ketersediaan jadwal.</p>
                 </section>
                 <div class="booking-help-card">

@@ -46,7 +46,7 @@ class MidtransService
         ];
     }
 
-    public function handleNotification(string $json): array
+    public function handleNotification(): array
     {
         $notification = new Notification();
 
