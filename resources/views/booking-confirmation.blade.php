@@ -18,7 +18,7 @@
                     <span>Kode Booking</span>
                     <strong>{{ $booking->reference }}</strong>
                     <div>
-                        <span>Treatment<strong>{{ $treatment['title'] }}</strong></span>
+                        <span>Treatment<strong>{{ $treatmentArray['title'] }}</strong></span>
                         <span>Tanggal<strong>{{ $booking->booking_date->translatedFormat('j M Y') }}</strong></span>
                         <span>Jam<strong>{{ $booking->booking_time }} WIB</strong></span>
                     </div>
@@ -89,7 +89,7 @@
                 @endif
 
                 <div class="booking-confirmation-actions">
-                    <a class="button button-outline" href="{{ route('treatment.show', $treatment['slug']) }}">Lihat Treatment</a>
+                    <a class="button button-outline" href="{{ route('treatment.show', $treatmentArray['slug']) }}">Lihat Treatment</a>
                     <a class="button button-pink" href="https://wa.me/6281234567890?text={{ rawurlencode('Halo Octa Beauty Care, saya ingin konfirmasi booking ' . $booking->reference) }}" target="_blank" rel="noopener noreferrer">Konfirmasi via WhatsApp</a>
                 </div>
                 <a class="booking-confirmation-home" href="{{ route('home') }}">Kembali ke Beranda</a>

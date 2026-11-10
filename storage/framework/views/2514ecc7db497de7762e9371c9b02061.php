@@ -39,9 +39,9 @@
                         <div class="layanan-media">
                             <img src="<?php echo e($service['image']); ?>" alt="<?php echo e($service['alt']); ?>" loading="lazy">
                             <span class="layanan-badge"><?php echo e($service['category']); ?></span>
-                            <button class="layanan-favorite" type="button" data-wishlist-toggle="<?php echo e($service['slug']); ?>" aria-label="Tambahkan <?php echo e($service['title']); ?> ke wishlist" aria-pressed="false">
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3s-7.5-4.6-7.5-9.6a4.2 4.2 0 0 1 7.5-2.6 4.2 4.2 0 0 1 7.5 2.6c0 5-7.5 9.6-7.5 9.6Z"/></svg>
-                            </button>
+                        <button class="layanan-favorite" type="button" data-wishlist-toggle="<?php echo e($service['slug']); ?>" data-wishlist-url="<?php echo e(route('wishlist.toggle')); ?>" data-wishlist-csrf="<?php echo e(csrf_token()); ?>" aria-label="Tambahkan <?php echo e($service['title']); ?> ke wishlist" aria-pressed="false">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3s-7.5-4.6-7.5-9.6a4.2 4.2 0 0 1 7.5-2.6 4.2 4.2 0 0 1 7.5 2.6c0 5-7.5 9.6-7.5 9.6Z"/></svg>
+                        </button>
                         </div>
                         <div class="layanan-body">
                             <h3><?php echo e($service['title']); ?></h3>
@@ -90,33 +90,43 @@
 <?php $__env->startPush('scripts'); ?>
     <script>
         (() => {
-            const wishlistKey = 'octa.wishlist';
+            const wishlistToggleButtons = Array.from(document.querySelectorAll('[data-wishlist-toggle]'));
 
-            const readWishlist = () => {
+            async function toggleWishlist(slug, button) {
+                const url = button.dataset.wishlistUrl;
+                const csrfToken = button.dataset.wishlistCsrf;
+                const isActive = button.classList.contains('is-active');
+
                 try {
-                    const items = JSON.parse(localStorage.getItem(wishlistKey) || '[]');
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                        body: JSON.stringify({ slug }),
+                    });
 
-                    return Array.isArray(items) ? items : [];
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        button.classList.toggle('is-active', data.added === true);
+                        button.setAttribute('aria-pressed', data.added === true ? 'true' : 'false');
+                        button.setAttribute('aria-label', data.added === true
+                            ? 'Hapus dari wishlist'
+                            : 'Tambahkan ke wishlist');
+                    }
                 } catch (error) {
-                    return [];
+                    console.error('Gagal mengubah wishlist:', error);
                 }
-            };
+            }
 
-            const writeWishlist = (items) => {
-                localStorage.setItem(wishlistKey, JSON.stringify(items));
-                window.dispatchEvent(new Event('octa:wishlist-updated'));
-            };
-
-            const syncWishlistButtons = () => {
-                const items = readWishlist();
-
-                document.querySelectorAll('[data-wishlist-toggle]').forEach((button) => {
-                    const active = items.includes(button.dataset.wishlistToggle);
-                    button.classList.toggle('is-active', active);
-                    button.setAttribute('aria-pressed', active ? 'true' : 'false');
-                    button.setAttribute('aria-label', active ? 'Hapus dari wishlist' : 'Tambahkan ke wishlist');
+            wishlistToggleButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    toggleWishlist(button.dataset.wishlistToggle, button);
                 });
-            };
+            });
 
             const filterButtons = () => Array.from(document.querySelectorAll('.treatment-filter'));
             const cards = () => Array.from(document.querySelectorAll('.layanan-card[data-filter]'));
@@ -135,30 +145,11 @@
             };
 
             document.addEventListener('DOMContentLoaded', () => {
-                syncWishlistButtons();
-
                 filterButtons().forEach((button) => {
                     button.addEventListener('click', () => {
                         filterButtons().forEach((item) => item.classList.remove('is-active'));
                         button.classList.add('is-active');
                         applyFilter(button.dataset.filter);
-                    });
-                });
-
-                document.querySelectorAll('[data-wishlist-toggle]').forEach((button) => {
-                    button.addEventListener('click', () => {
-                        const slug = button.dataset.wishlistToggle;
-                        const items = readWishlist();
-                        const index = items.indexOf(slug);
-
-                        if (index === -1) {
-                            items.push(slug);
-                        } else {
-                            items.splice(index, 1);
-                        }
-
-                        writeWishlist(items);
-                        syncWishlistButtons();
                     });
                 });
             });

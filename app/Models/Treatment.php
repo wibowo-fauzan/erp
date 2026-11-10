@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Booking;
 use Illuminate\Database\Eloquent\Model;
 
 class Treatment extends Model
@@ -13,6 +12,7 @@ class Treatment extends Model
         'filter',
         'category',
         'price',
+        'price_label',
         'duration_minutes',
         'description',
         'image',

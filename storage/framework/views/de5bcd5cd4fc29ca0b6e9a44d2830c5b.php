@@ -18,7 +18,7 @@
                     <span>Kode Booking</span>
                     <strong><?php echo e($booking->reference); ?></strong>
                     <div>
-                        <span>Treatment<strong><?php echo e($treatment['title']); ?></strong></span>
+                        <span>Treatment<strong><?php echo e($treatmentArray['title']); ?></strong></span>
                         <span>Tanggal<strong><?php echo e($booking->booking_date->translatedFormat('j M Y')); ?></strong></span>
                         <span>Jam<strong><?php echo e($booking->booking_time); ?> WIB</strong></span>
                     </div>
@@ -89,7 +89,7 @@
                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                 <div class="booking-confirmation-actions">
-                    <a class="button button-outline" href="<?php echo e(route('treatment.show', $treatment['slug'])); ?>">Lihat Treatment</a>
+                    <a class="button button-outline" href="<?php echo e(route('treatment.show', $treatmentArray['slug'])); ?>">Lihat Treatment</a>
                     <a class="button button-pink" href="https://wa.me/6281234567890?text=<?php echo e(rawurlencode('Halo Octa Beauty Care, saya ingin konfirmasi booking ' . $booking->reference)); ?>" target="_blank" rel="noopener noreferrer">Konfirmasi via WhatsApp</a>
                 </div>
                 <a class="booking-confirmation-home" href="<?php echo e(route('home')); ?>">Kembali ke Beranda</a>
