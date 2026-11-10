@@ -54,7 +54,9 @@
                                 </span>
                                 <span class="layanan-price"><?php echo e($service['price']); ?></span>
                             </div>
-                            <a class="layanan-action <?php if($service['primary']): ?> is-primary <?php endif; ?>" href="<?php echo e(route('booking.create', ['treatment' => $service['slug']])); ?>"><?php echo e($service['action']); ?></a>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($service['show_detail_button'] ?? true): ?>
+                                <a class="layanan-action <?php if($service['primary']): ?> is-primary <?php endif; ?>" href="<?php echo e(route('treatment.show', $service['slug'])); ?>">Lihat Detail <span aria-hidden="true">→</span></a>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
                     </article>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>

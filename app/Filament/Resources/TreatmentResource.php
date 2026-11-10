@@ -2,20 +2,24 @@
 
 namespace App\Filament\Resources;
 
-use App\Models\Treatment;
 use App\Filament\Actions\DeactivateOrDeleteBulk;
 use App\Filament\Concerns\HasDependentDelete;
+use App\Filament\Resources\TreatmentResource\Pages\CreateTreatment;
+use App\Filament\Resources\TreatmentResource\Pages\EditTreatment;
+use App\Filament\Resources\TreatmentResource\Pages\ListTreatments;
+use App\Models\Product;
+use App\Models\Treatment;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Support\RawJs;
-use Illuminate\Database\Eloquent\Builder;
 
 class TreatmentResource extends Resource
 {
     use HasDependentDelete;
+
     protected static ?string $model = Treatment::class;
 
     protected static ?string $navigationGroup = 'Data Master';
@@ -79,10 +83,46 @@ class TreatmentResource extends Resource
                             ->numeric()
                             ->required(),
 
+                        Forms\Components\CheckboxList::make('product_ids')
+                            ->label('Produk yang Digunakan')
+                            ->helperText('Pilih produk yang digunakan dalam treatment ini')
+                            ->options(fn () => Product::query()->where('is_active', true)->pluck('name', 'id'))
+                            ->columns(3),
+
+                        Forms\Components\TextInput::make('price_label')
+                            ->label('Label Harga (Tampilan)')
+                            ->helperText('Contoh: Mulai Rp 250rb')
+                            ->maxLength(100),
+
+                        Forms\Components\TextInput::make('filter')
+                            ->label('Filter / Kategori')
+                            ->helperText('Contoh: facial, brightening, anti-aging, consultation')
+                            ->maxLength(100),
+
+                        Forms\Components\Toggle::make('is_primary')
+                            ->label('Treatment Utama')
+                            ->helperText('Tandai sebagai treatment utama / primer')
+                            ->default(false),
+
                         Forms\Components\Toggle::make('is_active')
                             ->label('Status Aktif')
                             ->helperText('Nonaktifkan jika treatment tidak tersedia')
                             ->default(true),
+
+                        Forms\Components\Toggle::make('show_detail_button')
+                            ->label('Tampilkan Tombol Detail di Daftar')
+                            ->helperText('Tampilkan tombol "Lihat Detail" di halaman daftar treatment')
+                            ->default(true),
+
+                        Forms\Components\Toggle::make('show_booking_button')
+                            ->label('Tampilkan Tombol Booking di Detail')
+                            ->helperText('Tampilkan tombol "Booking Sekarang" di halaman detail treatment')
+                            ->default(true),
+
+                        Forms\Components\TextInput::make('alt')
+                            ->label('Alt Text Gambar')
+                            ->helperText('Deskripsi gambar untuk aksesibilitas')
+                            ->maxLength(255),
 
                         Forms\Components\FileUpload::make('image')
                             ->label('Gambar Treatment')
@@ -119,8 +159,22 @@ class TreatmentResource extends Resource
 
                 Tables\Columns\TextColumn::make('duration_minutes')
                     ->label('Durasi')
-                    ->formatStateUsing(fn ($state) => $state ? $state . ' Menit' : '-')
+                    ->formatStateUsing(fn ($state) => $state ? $state.' Menit' : '-')
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('price_label')
+                    ->label('Label Harga')
+                    ->toggleable(),
+
+                Tables\Columns\TextColumn::make('filter')
+                    ->label('Filter')
+                    ->badge()
+                    ->toggleable(),
+
+                Tables\Columns\IconColumn::make('is_primary')
+                    ->boolean()
+                    ->label('Utama')
+                    ->toggleable(),
 
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
@@ -149,9 +203,9 @@ class TreatmentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Resources\TreatmentResource\Pages\ListTreatments::route('/'),
-            'create' => \App\Filament\Resources\TreatmentResource\Pages\CreateTreatment::route('/create'),
-            'edit' => \App\Filament\Resources\TreatmentResource\Pages\EditTreatment::route('/{record}/edit'),
+            'index' => ListTreatments::route('/'),
+            'create' => CreateTreatment::route('/create'),
+            'edit' => EditTreatment::route('/{record}/edit'),
         ];
     }
 }

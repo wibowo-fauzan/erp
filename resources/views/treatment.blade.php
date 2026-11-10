@@ -55,7 +55,9 @@
                                 </span>
                                 <span class="layanan-price">{{ $service['price'] }}</span>
                             </div>
-                            <a class="layanan-action @if ($service['primary']) is-primary @endif" href="{{ route('booking.create', ['treatment' => $service['slug']]) }}">{{ $service['action'] }}</a>
+                            @if ($service['show_detail_button'] ?? true)
+                                <a class="layanan-action @if ($service['primary']) is-primary @endif" href="{{ route('treatment.show', $service['slug']) }}">Lihat Detail <span aria-hidden="true">→</span></a>
+                            @endif
                         </div>
                     </article>
                 @endforeach

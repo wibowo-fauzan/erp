@@ -13,36 +13,35 @@ class TreatmentSeeder extends Seeder
 
     public function run(): void
     {
-        Treatment::insert([
-            [
-                'slug' => 'octa-signature-glow',
-                'name' => 'Octa Signature Glow',
-                'filter' => 'facial',
-                'category' => 'Facial',
-                'price' => 500000.00,
-                'duration_minutes' => 60,
-                'description' => 'Perawatan wajah signature Octa untuk kulit segar dan bercahaya.',
-                'image' => null,
-                'action' => 'Book Now',
-                'is_primary' => true,
-                'alt' => 'Octa Signature Glow treatment',
-                'is_active' => true,
-            ],
-            [
-                'slug' => 'royal-pearl-whitening',
-                'name' => 'Royal Pearl Whitening',
-                'filter' => 'brightening',
-                'category' => 'Facial',
-                'price' => 650000.00,
-                'duration_minutes' => 75,
-                'description' => 'Perawatan brightening dengan rumus pearl untuk kulit lebih cerah.',
-                'image' => null,
-                'action' => 'Book Now',
-                'is_primary' => false,
-                'alt' => 'Royal Pearl Whitening treatment',
-                'is_active' => true,
-            ],
-        ]);
+        $treatments = config('treatments');
+
+        foreach ($treatments as $t) {
+            Treatment::firstOrCreate(
+                ['slug' => $t['slug']],
+                [
+                    'name' => $t['title'],
+                    'filter' => $t['filter'],
+                    'category' => $t['category'],
+                    'price' => $t['price'],
+                    'duration_minutes' => match ($t['duration']) {
+                        '30 Menit' => 30,
+                        '60 Menit' => 60,
+                        '75 Menit' => 75,
+                        '120 Menit' => 120,
+                        default => 60,
+                    },
+                    'description' => $t['description'],
+                    'image' => $t['image'],
+                    'price_label' => $t['price_label'] ?? null,
+                    'action' => $t['action'] ?? 'Detail Treatment',
+                    'is_primary' => $t['primary'] ?? false,
+                    'alt' => $t['alt'] ?? $t['title'],
+                    'show_detail_button' => true,
+                    'show_booking_button' => true,
+                    'is_active' => true,
+                ]
+            );
+        }
 
         Promotion::insert([
             [

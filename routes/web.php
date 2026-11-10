@@ -29,6 +29,8 @@ Route::get('/treatment/{slug}', [TreatmentController::class, 'show'])->name('tre
 Route::get('/promo', [PromotionController::class, 'index'])->name('promo');
 Route::get('/promo/{slug}', [PromotionController::class, 'show'])->name('promo.show');
 
+Route::get('/produk/{slug}', [ProductController::class, 'show'])->name('product.show');
+
 Route::get('/booking', [BookingController::class, 'create'])->name('booking.create');
 Route::post('/booking', [BookingController::class, 'store'])->middleware('throttle:10,1')->name('booking.store');
 Route::get('/booking/{reference}', [BookingController::class, 'show'])->name('booking.show');
@@ -57,6 +59,8 @@ Route::get('/wishlist', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profil', [ProfileController::class, 'index'])->name('profile');
     Route::post('/profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profil/transaksi/{reference}', [ProfileController::class, 'show'])->name('profile.transactions.show');
+    Route::post('/profil/transaksi/{reference}/bayar', [ProfileController::class, 'pay'])->name('profile.transactions.pay');
     Route::get('/booking-saya', [MyBookingController::class, 'index'])->name('my-bookings');
     Route::get('/api/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/api/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');

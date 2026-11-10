@@ -27,7 +27,9 @@
                             </span>
                             <span class="treatment-detail-price">{{ $treatment['price'] }}</span>
                         </div>
-                        <a class="button button-pink treatment-detail-booking" href="{{ route('booking.create', ['treatment' => $treatment['slug']]) }}">Booking Treatment <span aria-hidden="true">→</span></a>
+                        @if ($treatment['show_booking_button'] ?? true)
+                            <a class="button button-pink treatment-detail-booking" href="{{ route('booking.create', ['treatment' => $treatment['slug']]) }}">Booking Treatment <span aria-hidden="true">→</span></a>
+                        @endif
                     </div>
                     <figure class="treatment-detail-visual">
                         <img src="{{ $treatment['image'] }}" alt="{{ $treatment['alt'] }}" fetchpriority="high">
@@ -126,6 +128,39 @@
                             <p>{{ $faq['answer'] }}</p>
                         </details>
                     @endforeach
+                </div>
+            </div>
+        </section>
+
+        <section class="treatment-detail-products" aria-labelledby="treatment-products-title">
+            <div class="container">
+                <header class="treatment-detail-section-heading">
+                    <h2 id="treatment-products-title">Produk yang Digunakan</h2>
+                    <p>Produk perawatan yang kami gunakan dalam treatment ini.</p>
+                </header>
+                <div class="treatment-detail-products-grid">
+                    @php
+                        $productIds = $treatment['product_ids'] ?? [];
+                        $treatmentProducts = collect($productIds)->map(fn ($id) => \App\Models\Product::query()->where('id', $id)->where('is_active', true)->first())->filter();
+                    @endphp
+                    @if ($treatmentProducts->isNotEmpty())
+                        @foreach ($treatmentProducts as $product)
+                            <article class="treatment-product-card">
+                                <a href="{{ route('product.show', $product->slug) }}">
+                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" loading="lazy">
+                                </a>
+                                <div class="treatment-product-body">
+                                    <h3><a href="{{ route('product.show', $product->slug) }}">{{ $product->name }}</a></h3>
+                                    <p class="treatment-product-short">{{ \Illuminate\Support\Str::limit($product->description ?? '', 80) }}</p>
+                                    @if ($product->price)
+                                        <span class="treatment-product-price">{{ $product->price }}</span>
+                                    @endif
+                                </div>
+                            </article>
+                        @endforeach
+                    @else
+                        <p class="treatment-detail-empty">Belum ada produk yang ditetapkan untuk treatment ini.</p>
+                    @endif
                 </div>
             </div>
         </section>

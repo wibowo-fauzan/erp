@@ -42,7 +42,7 @@ class BookingController extends Controller
             'price_label' => $t->price_label ?? $t->price,
             'action' => $t->action,
             'primary' => $t->is_primary,
-            'image' => $t->image,
+            'image' => $t->image ? (str_starts_with($t->image, 'http') ? $t->image : '/storage/' . $t->image) : null,
             'alt' => $t->alt,
         ])->all();
         $promotions = config('promotions');
@@ -167,7 +167,7 @@ class BookingController extends Controller
                 'notes' => $validated['notes'] ?? null,
                 'total_amount' => $price,
                 'status' => 'menunggu_konfirmasi',
-                'payment_status' => 'menunggu_pembayaran',
+                'payment_status' => 'menunggu_verifikasi',
                 'midtrans_order_id' => $reference,
                 'midtrans_snap_token' => $midtransResult['snap_token'] ?? null,
                 'midtrans_response' => is_array($midtransResult) ? json_encode($midtransResult) : null,
@@ -201,7 +201,7 @@ class BookingController extends Controller
             'duration' => $treatment->duration_minutes,
             'price' => $treatment->price,
             'action' => $treatment->action,
-            'image' => $treatment->image,
+            'image' => $treatment->image ? (str_starts_with($treatment->image, 'http') ? $treatment->image : '/storage/' . $treatment->image) : null,
             'alt' => $treatment->alt,
         ];
 

@@ -16,7 +16,7 @@ class HomeController extends Controller
             ->map(fn ($t) => [
                 'name' => $t->name,
                 'description' => $t->description,
-                'image' => $t->image ?: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=700&q=85',
+                'image' => $t->image ? (str_starts_with($t->image, 'http') ? $t->image : '/storage/' . $t->image) : 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=700&q=85',
                 'alt' => $t->alt ?: $t->name,
             ]);
 

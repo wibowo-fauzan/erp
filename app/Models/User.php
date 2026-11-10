@@ -60,4 +60,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->is_active && in_array($this->role, ['owner', 'admin'], true);
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'user_id')->latest();
+    }
 }

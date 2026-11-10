@@ -52,7 +52,7 @@
                         <p style="margin-top:12px; font-size:12px; color:#94a3b8;">Setelah pembayaran, status akan diperbarui otomatis.</p>
                     </div>
 
-                    <script src="https://cdn.midtrans.com/snap.js" data-client-key="<?php echo e(config('services.midtrans.client_key')); ?>"></script>
+                    <script src="<?php echo e(config('services.midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js'); ?>" data-client-key="<?php echo e(config('services.midtrans.client_key')); ?>"></script>
                     <script>
                         (function() {
                             var snapToken = '<?php echo e($snapToken); ?>';
@@ -75,9 +75,6 @@
                                     },
                                     onPending: function(result) {
                                         window.location.href = '<?php echo e(route('booking.show', $booking->reference)); ?>?payment=pending';
-                                    },
-                                    onFailure: function(result) {
-                                        window.location.href = '<?php echo e(route('booking.show', $booking->reference)); ?>?payment=failed';
                                     },
                                     onError: function(error) {
                                         alert('Terjadi kesalahan saat memproses pembayaran.');

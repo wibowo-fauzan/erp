@@ -2,15 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\BookingResource\Pages\CreateBooking;
+use App\Filament\Resources\BookingResource\Pages\EditBooking;
+use App\Filament\Resources\BookingResource\Pages\ListBookings;
 use App\Models\Booking;
 use App\Models\Treatment;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Support\RawJs;
-use Illuminate\Database\Eloquent\Builder;
 
 class BookingResource extends Resource
 {
@@ -28,7 +30,7 @@ class BookingResource extends Resource
 
     public static function canAccess(): bool
     {
-        return auth()->check() && auth()->user()->role === 'admin';
+        return auth()->check() && in_array(auth()->user()->role, ['admin', 'owner'], true);
     }
 
     public static function form(Form $form): Form
@@ -158,7 +160,7 @@ class BookingResource extends Resource
 
                 Tables\Columns\TextColumn::make('treatment_slug')
                     ->label('Treatment')
-                    ->formatStateUsing(fn ($state) => \App\Models\Treatment::query()->where('slug', $state)->value('name') ?? $state),
+                    ->formatStateUsing(fn ($state) => Treatment::query()->where('slug', $state)->value('name') ?? $state),
 
                 Tables\Columns\TextColumn::make('booking_date')
                     ->label('Tanggal')
@@ -229,9 +231,9 @@ class BookingResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Resources\BookingResource\Pages\ListBookings::route('/'),
-            'create' => \App\Filament\Resources\BookingResource\Pages\CreateBooking::route('/create'),
-            'edit' => \App\Filament\Resources\BookingResource\Pages\EditBooking::route('/{record}/edit'),
+            'index' => ListBookings::route('/'),
+            'create' => CreateBooking::route('/create'),
+            'edit' => EditBooking::route('/{record}/edit'),
         ];
     }
 }
