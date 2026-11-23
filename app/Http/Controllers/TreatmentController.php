@@ -20,10 +20,12 @@ class TreatmentController extends Controller
                 'description' => $t->description,
                 'duration' => $t->duration_minutes,
                 'price' => $t->price,
+                'price_label' => $t->price_label,
                 'action' => $t->action,
                 'primary' => $t->is_primary,
                 'image' => $t->image ? (str_starts_with($t->image, 'http') ? $t->image : '/storage/' . $t->image) : null,
                 'alt' => $t->alt,
+                'social_media' => $t->social_media,
             ]);
 
         return view('treatment', ['services' => $treatments]);
@@ -47,6 +49,7 @@ class TreatmentController extends Controller
             'duration' => $treatment->duration_minutes,
             'price' => $treatment->price,
             'product_ids' => $treatment->product_ids,
+            'social_media' => $treatment->social_media,
             'action' => $treatment->action,
             'primary' => $treatment->is_primary,
             'image' => $treatment->image ? (str_starts_with($treatment->image, 'http') ? $treatment->image : '/storage/' . $treatment->image) : null,

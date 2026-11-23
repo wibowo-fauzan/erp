@@ -43,6 +43,32 @@ class ProfileController extends Controller
         return view('profile', compact('user', 'bookings', 'treatments', 'stats', 'filter'));
     }
 
+    public function transactions(Request $request): View
+    {
+        $user = auth()->user();
+
+        $query = $user->bookings()->with('treatment');
+
+        $filter = $request->get('filter', 'all');
+        match ($filter) {
+            'unpaid' => $query->where('payment_status', 'menunggu_verifikasi'),
+            'paid' => $query->where('payment_status', 'dikonfirmasi'),
+            'failed' => $query->where('payment_status', 'ditolak'),
+            default => null,
+        };
+
+        $bookings = $query->paginate(10)->withQueryString();
+
+        $stats = [
+            'total' => $user->bookings()->count(),
+            'paid' => $user->bookings()->where('payment_status', 'dikonfirmasi')->count(),
+            'unpaid' => $user->bookings()->where('payment_status', 'menunggu_verifikasi')->count(),
+            'failed' => $user->bookings()->where('payment_status', 'ditolak')->count(),
+        ];
+
+        return view('profile-transactions-list', compact('user', 'bookings', 'stats', 'filter'));
+    }
+
     public function show(string $reference): View
     {
         $booking = Booking::query()

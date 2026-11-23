@@ -54,16 +54,12 @@
                     <span>Jl.raya Centex rt 11/10 no 66, RT.11/RW.10, Ciracas, Kec. Ciracas, Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta</span>
                 </li>
                 <li>
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h3l2 5-2.5 1.5a12 12 0 0 0 6 6L15 13l5 2v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3 5.2 2 2 0 0 1 5 3Z"/></svg>
-                    <a href="tel:+622188888888">+62 21 8888 8888</a>
-                </li>
-                <li>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
                     <a href="mailto:hello@octabeautycare.com">hello@octabeautycare.com</a>
                 </li>
                 <li>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg>
-                    <span>Senin - Minggu; 09:00 - 20:00</span>
+                    <span>Senin - Jumat; 15:00 - 20:00 WIB · Sabtu - Minggu; 09:00 - 18:00</span>
                 </li>
             </ul>
         </div>

@@ -1,13 +1,12 @@
 @php
     $channels = [
-        ['title' => 'Telepon', 'description' => 'Butuh respons cepat? Hubungi kami langsung.', 'value' => '+62 21 8888 8888', 'href' => 'tel:+622188888888', 'icon' => 'phone'],
         ['title' => 'WhatsApp', 'description' => 'Konsultasi via chat lebih nyaman.', 'value' => '0812 3456 7890', 'href' => 'https://wa.me/6281234567890', 'icon' => 'whatsapp'],
         ['title' => 'Instagram', 'description' => 'Update harian & hasil perawatan.', 'value' => '@octabeauty.care', 'href' => 'https://www.instagram.com/', 'icon' => 'instagram'],
         ['title' => 'Alamat', 'description' => 'Kunjungi klinik kami di Jakarta.', 'value' => 'Lihat di Google Maps', 'href' => 'https://www.google.com/maps/search/?api=1&query=Octa+Beauty+Care+Ciracas+Jakarta+Timur', 'icon' => 'pin'],
     ];
 
     $operationalHours = [
-        ['days' => 'Senin - Jumat', 'time' => '09:00 - 20:00'],
+        ['days' => 'Senin - Jumat', 'time' => '15:00 - 20:00 WIB'],
         ['days' => 'Sabtu - Minggu', 'time' => '09:00 - 18:00'],
     ];
 
@@ -25,8 +24,8 @@
 
 @extends('layouts.website')
 
-@section('meta_title', 'Octa Beauty Care | Hubungi Kami')
-@section('meta_description', 'Hubungi Octa Beauty Care untuk konsultasi perawatan kecantikan. Telepon, WhatsApp, Instagram, jam operasional, dan lokasi klinik kami di Jakarta.')
+@section('meta_title', 'Tentang Octa Beauty Care | Klinik Kecantikan Terpercaya')
+@section('meta_description', 'Mengenal Octa Beauty Care, klinik kecantikan terpercaya di Ciracas Jakarta Timur dengan layanan perawatan kulit profesional, terapis bersertifikat, dan lisensi resmi.')
 @section('meta_image', 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=1200&h=630&q=85')
 
 @section('content')

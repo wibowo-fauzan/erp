@@ -58,6 +58,7 @@ Route::get('/wishlist', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/profil', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profil/transactions', [ProfileController::class, 'transactions'])->name('profile.transactions');
     Route::post('/profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profil/transaksi/{reference}', [ProfileController::class, 'show'])->name('profile.transactions.show');
     Route::post('/profil/transaksi/{reference}/bayar', [ProfileController::class, 'pay'])->name('profile.transactions.pay');

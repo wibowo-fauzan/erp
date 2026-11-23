@@ -18,6 +18,7 @@ class Treatment extends Model
         'description',
         'image',
         'product_ids',
+        'social_media',
         'is_primary',
         'alt',
         'show_detail_button',
@@ -31,6 +32,7 @@ class Treatment extends Model
         'show_detail_button' => 'boolean',
         'show_booking_button' => 'boolean',
         'product_ids' => 'array',
+        'social_media' => 'array',
     ];
 
     protected static function booted(): void

@@ -18,6 +18,10 @@ class HomeController extends Controller
                 'description' => $t->description,
                 'image' => $t->image ? (str_starts_with($t->image, 'http') ? $t->image : '/storage/' . $t->image) : 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=700&q=85',
                 'alt' => $t->alt ?: $t->name,
+                'price' => $t->price,
+                'price_label' => $t->price_label,
+                'duration' => $t->duration_minutes,
+                'social_media' => $t->social_media,
             ]);
 
         $promotions = Promotion::query()

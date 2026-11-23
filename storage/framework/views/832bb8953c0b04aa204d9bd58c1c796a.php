@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('meta_title', $treatment['title'] . ' | Treatment Octa Beauty Care'); ?>
 <?php $__env->startSection('meta_description', $treatment['description']); ?>
 <?php $__env->startSection('meta_image', $treatment['image']); ?>
@@ -23,11 +21,27 @@
                         <div class="treatment-detail-meta">
                             <span>
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg>
-                                <?php echo e($treatment['duration']); ?>
-
+                                <?php echo e($treatment['duration']); ?> menit
                             </span>
-                            <span class="treatment-detail-price"><?php echo e($treatment['price']); ?></span>
+                            <span class="treatment-detail-price"><?php echo e(rupiah($treatment['price'])); ?></span>
                         </div>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(! empty($treatment['social_media'])): ?>
+                            <div class="treatment-detail-social" aria-label="Media sosial <?php echo e($treatment['title']); ?>">
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $treatment['social_media']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $type => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <a href="<?php echo e($url); ?>" class="treatment-detail-social-icon" target="_blank" rel="noopener noreferrer" aria-label="<?php echo e(ucfirst($type)); ?>">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($type === 'instagram'): ?>
+                                                <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/>
+                                            <?php elseif($type === 'whatsapp'): ?>
+                                                <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/><path d="M8.7 8.2c.3 0 .5.2.7.4l.6 1.2c.1.2.1.4 0 .6l-.4.5c.5 1 1.2 1.8 2.2 2.3l.5-.4c.2-.1.4-.1.6 0l1.2.6c.2.1.4.4.4.7v1c0 .5-.4.9-.9.9-4 .2-7.7-3.4-7.9-7.4 0-.5.4-.9.9-.9h1Z"/>
+                                            <?php elseif($type === 'facebook'): ?>
+                                                <path class="social-fill" d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4.1 1.5-4.1 4.2v2.2H7.5V13h2.8v8h3.2Z"/>
+                                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                        </svg>
+                                    </a>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($treatment['show_booking_button'] ?? true): ?>
                             <a class="button button-pink treatment-detail-booking" href="<?php echo e(route('booking.create', ['treatment' => $treatment['slug']])); ?>">Booking Treatment <span aria-hidden="true">→</span></a>
                         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
@@ -65,6 +79,39 @@
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </ul>
                 </aside>
+            </div>
+        </section>
+
+        <section class="treatment-detail-products" aria-labelledby="treatment-products-title">
+            <div class="container">
+                <header class="treatment-detail-section-heading">
+                    <h2 id="treatment-products-title">Produk yang Digunakan</h2>
+                    <p>Produk perawatan yang kami gunakan dalam treatment ini.</p>
+                </header>
+                <div class="treatment-detail-products-grid">
+                    <?php
+                        $productIds = $treatment['product_ids'] ?? [];
+                        $treatmentProducts = collect($productIds)->map(fn ($id) => \App\Models\Product::query()->where('id', $id)->where('is_active', true)->first())->filter();
+                    ?>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($treatmentProducts->isNotEmpty()): ?>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $treatmentProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <article class="treatment-product-card">
+                                <a href="<?php echo e(route('product.show', $product->slug)); ?>">
+                                    <img src="<?php echo e($product->image); ?>" alt="<?php echo e($product->name); ?>" loading="lazy">
+                                </a>
+                                <div class="treatment-product-body">
+                                    <h3><a href="<?php echo e(route('product.show', $product->slug)); ?>"><?php echo e($product->name); ?></a></h3>
+                                    <p class="treatment-product-short"><?php echo e(\Illuminate\Support\Str::limit($product->description ?? '', 80)); ?></p>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($product->price): ?>
+                                        <span class="treatment-product-price"><?php echo e(rupiah($product->price)); ?></span>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                </div>
+                            </article>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    <?php else: ?>
+                        <p class="treatment-detail-empty">Belum ada produk yang ditetapkan untuk treatment ini.</p>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                </div>
             </div>
         </section>
 
@@ -129,39 +176,6 @@
                             <p><?php echo e($faq['answer']); ?></p>
                         </details>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                </div>
-            </div>
-        </section>
-
-        <section class="treatment-detail-products" aria-labelledby="treatment-products-title">
-            <div class="container">
-                <header class="treatment-detail-section-heading">
-                    <h2 id="treatment-products-title">Produk yang Digunakan</h2>
-                    <p>Produk perawatan yang kami gunakan dalam treatment ini.</p>
-                </header>
-                <div class="treatment-detail-products-grid">
-                    <?php
-                        $productIds = $treatment['product_ids'] ?? [];
-                        $treatmentProducts = collect($productIds)->map(fn ($id) => \App\Models\Product::query()->where('id', $id)->where('is_active', true)->first())->filter();
-                    ?>
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($treatmentProducts->isNotEmpty()): ?>
-                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $treatmentProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <article class="treatment-product-card">
-                                <a href="<?php echo e(route('product.show', $product->slug)); ?>">
-                                    <img src="<?php echo e($product->image); ?>" alt="<?php echo e($product->name); ?>" loading="lazy">
-                                </a>
-                                <div class="treatment-product-body">
-                                    <h3><a href="<?php echo e(route('product.show', $product->slug)); ?>"><?php echo e($product->name); ?></a></h3>
-                                    <p class="treatment-product-short"><?php echo e(\Illuminate\Support\Str::limit($product->description ?? '', 80)); ?></p>
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($product->price): ?>
-                                        <span class="treatment-product-price"><?php echo e($product->price); ?></span>
-                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                                </div>
-                            </article>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                    <?php else: ?>
-                        <p class="treatment-detail-empty">Belum ada produk yang ditetapkan untuk treatment ini.</p>
-                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                 </div>
             </div>
         </section>

@@ -1,13 +1,12 @@
 @php
     $channels = [
-        ['title' => 'Telepon', 'description' => 'Butuh respons cepat? Hubungi kami langsung.', 'value' => '+62 21 8888 8888', 'href' => 'tel:+622188888888', 'icon' => 'phone'],
         ['title' => 'WhatsApp', 'description' => 'Konsultasi via chat lebih nyaman.', 'value' => '0812 3456 7890', 'href' => 'https://wa.me/6281234567890', 'icon' => 'whatsapp'],
         ['title' => 'Instagram', 'description' => 'Update harian & hasil perawatan.', 'value' => '@octabeauty.care', 'href' => 'https://www.instagram.com/', 'icon' => 'instagram'],
         ['title' => 'Alamat', 'description' => 'Kunjungi klinik kami di Jakarta.', 'value' => 'Lihat di Google Maps', 'href' => 'https://www.google.com/maps/search/?api=1&query=Octa+Beauty+Care+Ciracas+Jakarta+Timur', 'icon' => 'pin'],
     ];
 
     $operationalHours = [
-        ['days' => 'Senin - Jumat', 'time' => '09:00 - 20:00'],
+        ['days' => 'Senin - Jumat', 'time' => '15:00 - 20:00 WIB'],
         ['days' => 'Sabtu - Minggu', 'time' => '09:00 - 18:00'],
     ];
 
@@ -34,7 +33,7 @@
 @extends('layouts.website')
 
 @section('meta_title', 'Kontak | Octa Beauty Care')
-@section('meta_description', 'Hubungi Octa Beauty Care Ciracas. Telepon, WhatsApp, Instagram, jam operasional, form pesan, dan peta lokasi klinik kami di Jakarta Timur.')
+@section('meta_description', 'Hubungi Octa Beauty Care Ciracas. WhatsApp, Instagram, jam operasional, form pesan, dan peta lokasi klinik kami di Jakarta Timur.')
 @section('meta_image', 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=1200&h=630&q=85')
 
 @section('content')
@@ -44,15 +43,6 @@
             <h1 id="kontak-title">Hubungi Octa Beauty Care</h1>
             <p>Kami siap membantu menjawab pertanyaan dan kebutuhan perawatan kecantikanmu. Pilih cara yang paling nyaman untuk Anda menghubungi tim kami.</p>
             <div class="kontak-quick">
-                <a class="kontak-quick-item" href="tel:+622188888888">
-                    <span class="kontak-quick-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M5 3h3l2 5-2.5 1.5a12 12 0 0 0 6 6L15 13l5 2v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3 5.2 2 2 0 0 1 5 3Z"/></svg>
-                    </span>
-                    <span>
-                        <small>Telepon</small>
-                        <strong>+62 21 8888 8888</strong>
-                    </span>
-                </a>
                 <a class="kontak-quick-item" href="https://wa.me/{{ $whatsappNumber }}" target="_blank" rel="noopener noreferrer">
                     <span class="kontak-quick-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/><path d="M8.7 8.2c.3 0 .5.2.7.4l.6 1.2c.1.2.1.4 0 .6l-.4.5c.5 1 1.2 1.8 2.2 2.3l.5-.4c.2-.1.4-.1.6 0l1.2.6c.2.1.4.4.4.7v1c0 .5-.4.9-.9.9-4 .2-7.7-3.4-7.9-7.4 0-.5.4-.9.9-.9h1Z"/></svg>
@@ -105,9 +95,6 @@
                     <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=85" alt="Ruang tunggu Octa Beauty Care di Ciracas, Jakarta Timur" width="900" height="1125">
                 </div>
                 <div class="kontak-showcase-stripe">
-                    <a href="tel:+622188888888" aria-label="Telepon Octa Beauty Care">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h3l2 5-2.5 1.5a12 12 0 0 0 6 6L15 13l5 2v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3 5.2 2 2 0 0 1 5 3Z"/></svg>
-                    </a>
                     <a href="https://wa.me/{{ $whatsappNumber }}" target="_blank" rel="noopener noreferrer" aria-label="Chat WhatsApp Octa Beauty Care">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/><path d="M8.7 8.2c.3 0 .5.2.7.4l.6 1.2c.1.2.1.4 0 .6l-.4.5c.5 1 1.2 1.8 2.2 2.3l.5-.4c.2-.1.4-.1.6 0l1.2.6c.2.1.4.4.4.7v1c0 .5-.4.9-.9.9-4 .2-7.7-3.4-7.9-7.4 0-.5.4-.9.9-.9h1Z"/></svg>
                     </a>

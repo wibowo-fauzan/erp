@@ -642,6 +642,9 @@ h1 em, h2 em { color: var(--pink); font-weight: 500; }
 .octa-strip-icon .octa-solid { fill: currentColor; stroke: none; }
 .octa-strip-item strong { display: block; font-size: 17px; }
 .octa-strip-item span { display: block; margin-top: 3px; color: var(--muted); font-size: 15px; }
+.octa-strip-cert { width: 48px; height: 48px; flex: 0 0 auto; border-radius: 50%; background: var(--pink-pale); overflow: hidden; border: 1px solid var(--line); cursor: pointer; }
+.octa-strip-cert img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.octa-strip-cert:hover { transform: translateY(-2px); }
 
 .octa-section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 26px; margin-bottom: 38px; }
 .octa-section-head .eyebrow { font-size: 13px; }
@@ -922,7 +925,7 @@ h1 em, h2 em { color: var(--pink); font-weight: 500; }
 .layanan-favorite:focus-visible { outline: 3px solid rgb(244 91 138 / 45%); outline-offset: 2px; }
 .layanan-body { display: flex; flex: 1; flex-direction: column; padding: 18px; }
 .layanan-body h2 { margin: 0 0 8px; font-family: var(--serif); font-size: 21px; font-weight: 600; }
-.layanan-body p { display: -webkit-box; min-height: 84px; overflow: hidden; margin: 0 0 14px; color: var(--muted); font-size: 17px; line-height: 1.6; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+.layanan-body p { display: -webkit-box; min-height: 84px; overflow: hidden; margin: 0 0 14px; color: var(--muted); font-size: 15px; line-height: 1.6; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
 .layanan-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 10px; padding-top: 13px; border-top: 1px solid var(--line); }
 .layanan-duration { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 15px; }
 .layanan-duration svg { width: 15px; height: 15px; color: var(--pink); fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
@@ -1675,4 +1678,78 @@ h1 em, h2 em { color: var(--pink); font-weight: 500; }
     .kontak-warm { padding: 58px 0 64px; }
     .kontak-warm-badge { top: -30px; right: 18px; width: 74px; height: 74px; }
     .kontak-warm-badge svg { width: 32px; height: 32px; }
+}
+
+/* ==========================================================
+   Octa services - price, duration, social icons
+   ========================================================== */
+.octa-service-body p { font-size: 15px; line-height: 1.6; margin: 8px 0 0; }
+.octa-service-price { display: block; margin: 4px 0 6px; color: var(--pink-dark); font-size: 16px; font-weight: 700; }
+.octa-service-meta { display: flex; align-items: center; gap: 4px; margin-top: 10px; }
+.octa-service-duration { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; font-weight: 600; }
+.octa-service-duration svg { width: 14px; height: 14px; color: var(--pink-dark); fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.octa-service-social { display: flex; gap: 8px; margin-top: 10px; }
+.octa-service-social-icon { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; border: 1px solid var(--line); color: var(--pink-dark); background: var(--white); transition: background .2s ease, color .2s ease, transform .2s ease; }
+.octa-service-social-icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.octa-service-social-icon .social-fill { fill: currentColor; stroke: none; }
+.octa-service-social-icon:hover { background: var(--pink); color: #fff; transform: translateY(-2px); }
+
+/* ==========================================================
+   Octa license section
+   ========================================================== */
+.octa-license { padding: 84px 0; background: #fff; }
+.octa-license-head { display: grid; justify-items: center; margin-bottom: 40px; text-align: center; }
+.octa-license-head .eyebrow { font-size: 13px; }
+.octa-license-head h2 { margin: 10px 0 12px; font-family: var(--serif); font-size: clamp(29px, 3.4vw, 40px); font-weight: 600; letter-spacing: -.045em; }
+.octa-license-head h2 em { color: var(--pink); font-weight: 500; }
+.octa-license-head p { max-width: 480px; margin: 0; color: var(--muted); font-size: 17px; line-height: 1.8; }
+.octa-license-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.octa-license-card { overflow: hidden; border: 1px solid #f3e6ec; border-radius: 20px; background: #fff; box-shadow: 0 14px 34px rgb(58 30 45 / 6%); transition: transform .2s ease, box-shadow .2s ease; display: flex; flex-direction: column; }
+.octa-license-card:hover { transform: translateY(-4px); box-shadow: 0 22px 48px rgb(58 30 45 / 10%); }
+.octa-license-media { position: relative; height: 200px; overflow: hidden; background: #f4e7ec; cursor: pointer; }
+.octa-license-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.octa-license-card:hover .octa-license-media img { transform: scale(1.05); }
+.octa-license-badge { position: absolute; z-index: 1; top: 14px; left: 14px; padding: 6px 12px; border-radius: 999px; background: var(--pink); color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+.octa-license-body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }
+.octa-license-body h3 { margin: 0 0 8px; font-family: var(--serif); font-size: 20px; font-weight: 600; }
+.octa-license-body > p { margin: 0 0 14px; color: var(--muted); font-size: 16px; line-height: 1.7; }
+.octa-license-link { display: inline-flex; align-items: center; gap: 8px; color: var(--pink-dark); font-size: 15px; font-weight: 700; text-decoration: none; margin-top: auto; }
+.octa-license-link:hover { color: var(--pink); }
+
+/* ==========================================================
+   Octa modal (sertifikat & lisensi)
+   ========================================================== */
+.octa-modal { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgb(20 18 22 / 55%); backdrop-filter: blur(6px); padding: 24px; }
+.octa-modal[hidden] { display: none; }
+.octa-modal-backdrop { position: absolute; inset: 0; }
+.octa-modal-panel { position: relative; z-index: 1; width: min(720px, 92vw); max-height: 90vh; overflow: auto; background: var(--white); border-radius: 22px; box-shadow: 0 30px 70px rgb(41 37 31 / 18%); animation: octa-modal-fade .25s ease; }
+@keyframes octa-modal-fade { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
+.octa-modal-close { position: absolute; top: 16px; right: 18px; z-index: 2; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 12px; background: #f4e7ec; color: var(--ink); cursor: pointer; transition: background .2s ease; }
+.octa-modal-close:hover { background: var(--pink); color: #fff; }
+.octa-modal-close svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+.octa-modal-content { padding: 28px 32px 30px; text-align: center; }
+.octa-modal-content h3 { margin: 0 0 10px; font-family: var(--serif); font-size: clamp(24px, 3vw, 30px); font-weight: 600; }
+.octa-modal-image-wrap { margin: 0 0 16px; border-radius: 16px; overflow: hidden; background: #f4e7ec; border: 1px solid #f3e6ec; max-height: 55vh; display: flex; align-items: center; justify-content: center; }
+.octa-modal-image-wrap img { max-width: 100%; max-height: 55vh; object-fit: contain; display: block; }
+.octa-modal-content p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.7; }
+
+/* Social icons - detail & catalog */
+.treatment-detail-social { display: flex; gap: 8px; margin-top: 12px; justify-content: center; }
+.treatment-detail-social-icon { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; border: 1px solid var(--line); color: var(--pink-dark); background: var(--white); transition: background .2s ease, color .2s ease, transform .2s ease; }
+.treatment-detail-social-icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.treatment-detail-social-icon .social-fill { fill: currentColor; stroke: none; }
+.treatment-detail-social-icon:hover { background: var(--pink); color: #fff; transform: translateY(-2px); }
+.layanan-social { display: flex; gap: 6px; margin-top: 8px; }
+.layanan-social-icon { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 50%; border: 1px solid var(--line); color: var(--pink-dark); background: var(--white); transition: background .2s ease, color .2s ease, transform .2s ease; }
+.layanan-social-icon svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.layanan-social-icon .social-fill { fill: currentColor; stroke: none; }
+.layanan-social-icon:hover { background: var(--pink); color: #fff; transform: translateY(-2px); }
+
+@media (max-width: 720px) {
+    .octa-license-grid { grid-template-columns: 1fr; }
+    .octa-license-media { height: 160px; }
+    .octa-service-grid { grid-template-columns: 1fr; }
+    .octa-modal { padding: 16px; }
+    .octa-modal-panel { max-height: 88vh; }
+    .octa-modal-content { padding: 22px 24px 24px; }
 }

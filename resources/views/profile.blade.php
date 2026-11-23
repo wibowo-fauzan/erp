@@ -48,17 +48,26 @@
 .profile-stat-value { font-family: var(--serif); font-size: 32px; font-weight: 700; color: var(--ink); line-height: 1; }
 .profile-stat-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); }
 
-/* Filters */
+/* Filter Chips */
 .profile-filters { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
-.profile-filter-tab { padding: 12px 20px; border-radius: 14px; border: 1px solid var(--line); background: var(--white); color: var(--muted); font-size: 14px; font-weight: 600; cursor: pointer; transition: all .25s cubic-bezier(0.4, 0, 0.2, 1); white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; position: relative; overflow: hidden; text-decoration: none; }
-.profile-filter-tab::before { content: ''; position: absolute; inset: 0; background: var(--pink-pale); transform: scaleX(0); transition: transform .25s ease; transform-origin: left; z-index: 0; }
-.profile-filter-tab span, .profile-filter-tab .count { position: relative; z-index: 1; }
-.profile-filter-tab:hover { border-color: var(--pink); color: var(--pink-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgb(200 55 106 / 12%); text-decoration: none; }
-.profile-filter-tab:hover::before { transform: scaleX(1); }
-.profile-filter-tab.active { background: var(--pink); border-color: var(--pink-dark); color: var(--pink-dark); box-shadow: 0 8px 20px rgb(200 55 106 / 20%); }
-.profile-filter-tab.active::before { transform: scaleX(1); background: var(--pink-dark); }
-.profile-filter-tab.active .count { background: rgba(0,0,0,0.15); color: #fff; }
-.profile-filter-tab .count { min-width: 26px; height: 26px; background: rgba(0,0,0,0.08); color: var(--ink); border-radius: 13px; font-size: 12px; font-weight: 800; text-align: center; line-height: 26px; }
+.profile-filter-chip { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 14px; border: 1px solid var(--line); background: var(--white); color: var(--muted); font-size: 14px; font-weight: 600; cursor: pointer; transition: all .25s cubic-bezier(0.4, 0, 0.2, 1); white-space: nowrap; position: relative; overflow: hidden; text-decoration: none; }
+.profile-filter-chip::before { content: ''; position: absolute; inset: 0; background: var(--pink-pale); transform: scaleX(0); transition: transform .25s ease; transform-origin: left; z-index: 0; }
+.profile-filter-chip .chip-icon, .profile-filter-chip .chip-count { position: relative; z-index: 1; }
+.profile-filter-chip:hover { border-color: var(--pink); color: var(--pink-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgb(200 55 106 / 12%); }
+.profile-filter-chip:hover::before { transform: scaleX(1); background: var(--pink-dark); }
+.profile-filter-chip.active {
+    background: var(--pink) !important;
+    border-color: var(--pink-dark) !important;
+    color: #fff !important;
+    box-shadow: 0 8px 20px rgb(200 55 106 / 20%);
+}
+.profile-filter-chip.active::before { transform: scaleX(1); background: var(--pink-dark); }
+.profile-filter-chip.active .chip-icon { color: #fff !important; filter: none !important; }
+.profile-filter-chip.active .chip-count { background: rgba(255,255,255,0.25) !important; color: #fff !important; }
+.profile-filter-chip.active span { color: #fff !important; }
+.profile-filter-chip.active .chip-count { min-width: 26px; height: 26px; background: rgba(255,255,255,0.25); color: #fff; border-radius: 13px; font-size: 12px; font-weight: 800; text-align: center; line-height: 26px; }
+.profile-filter-chip.loading { pointer-events: none; opacity: 0.6; }
+.profile-filter-chip .chip-icon { font-size: 16px; filter: grayscale(0.4); opacity: 0.9; }
 
 /* History Section */
 .profile-history { margin-bottom: 40px; }
@@ -98,8 +107,10 @@
 .btn-pay:hover::before { transform: translateX(100%); }
 .btn-pay:disabled { opacity: .65; cursor: not-allowed; transform: none; box-shadow: none; }
 .btn-pay:disabled::before { display: none; }
+.btn-pay.loading { color: transparent !important; }
 .btn-detail { background: transparent; color: var(--pink-dark); border: 1px solid var(--line); border-radius: 12px; padding: 12px 20px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all .25s cubic-bezier(0.4, 0, 0.2, 1); white-space: nowrap; text-decoration: none; text-align: center; display: inline-block; }
 .btn-detail:hover { border-color: var(--pink); background: var(--pink-pale); color: var(--pink-dark); transform: translateY(-1px); }
+.btn-detail:disabled { opacity: 0.6; cursor: not-allowed; }
 
 /* Empty State */
 .profile-empty { text-align: center; padding: 72px 32px; background: var(--white); border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 2px 12px rgb(36 31 39 / 5%); }
@@ -137,9 +148,41 @@
 .toggle-edit:hover { border-color: var(--pink); color: var(--pink-dark); background: var(--pink-pale); }
 .toggle-edit input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--pink); }
 
-/* Flash Message */
-.profile-flash { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 14px 20px; border-radius: 14px; font-size: 14px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; animation: slideDown .4s ease; }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+/* ===== Interactive Components ===== */
+.toast-container { position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+.toast { pointer-events: auto; display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-radius: 14px; font-size: 14px; font-weight: 600; min-width: 300px; box-shadow: 0 10px 30px rgb(36 31 39 / 12%); animation: slideIn .35s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid transparent; }
+.toast.success { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+.toast.error { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+.toast.info { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+.toast .icon { font-size: 18px; flex-shrink: 0; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+
+.modal { position: fixed; inset: 0; z-index: 1100; display: none; align-items: center; justify-content: center; padding: 24px; }
+.modal-open .modal { display: flex; }
+.modal-overlay { position: absolute; inset: 0; background: rgb(36 31 39 / 45%); backdrop-filter: blur(4px); animation: fadeIn .25s ease; }
+.modal-content { position: relative; background: var(--white); border: 1px solid var(--line); border-radius: 24px; width: min(640px, 92vw); max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 60px rgb(36 31 39 / 18%); animation: scaleIn .3s cubic-bezier(0.4, 0, 0.2, 1); }
+.modal-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--white); color: var(--ink); font-size: 20px; cursor: pointer; display: grid; place-items: center; line-height: 1; transition: all .2s ease; }
+.modal-close:hover { background: var(--pink-pale); color: var(--pink-dark); border-color: var(--pink); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+
+.modal-body { padding: 28px 32px; }
+.modal-loading { text-align: center; padding: 40px 24px; color: var(--muted); font-size: 14px; }
+.modal-error { text-align: center; padding: 40px 24px; color: #991b1b; font-size: 14px; }
+
+.loading-overlay { position: absolute; inset: 0; background: rgb(255 255 255 / 0.85); border-radius: inherit; display: grid; place-items: center; z-index: 3; animation: fadeIn .2s ease; }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--line); border-top-color: var(--pink); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.skeleton { background: #f3f4f6; border-radius: 8px; animation: pulse 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.skeleton-text { height: 16px; margin-bottom: 8px; }
+.skeleton-text:last-child { margin-bottom: 0; }
+.skeleton-avatar { width: 48px; height: 48px; border-radius: 50%; }
+.skeleton-line { width: 100%; height: 20px; border-radius: 4px; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.btn-confirm-delete { background: transparent; color: #dc2626; border: 1px solid #fecaca; border-radius: 10px; padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.btn-confirm-delete:hover { background: #fef2f2; border-color: #dc2626; }
 
 /* Responsive */
 @media (max-width: 900px) {
@@ -161,32 +204,43 @@
     .profile-hero { padding: 28px; }
     .profile-edit-card { padding: 24px; }
     .profile-name { font-size: 28px; }
+    .toast { min-width: auto; width: 90vw; }
 }
 </style>
 
-<!-- Flash -->
+<!-- Toast container -->
+<div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
 @if (session('status'))
-    <div class="profile-flash"><span aria-hidden="true">✦</span>{{ session('status') }}</div>
+    <script id="inline-flash" data-type="success" data-message="{{ addslashes(session('status')) }}"></script>
 @endif
 @if ($errors->any())
+    <script id="inline-flash" data-type="error" data-message="Mohon periksa kembali data yang Anda isi.">{{ $errors->first() }}</script>
+@endif
+
+<!-- Flash (fallback for non-JS) -->
+@if (session('status') && ! request()->ajax())
+    <div class="profile-flash"><span aria-hidden="true">✦</span>{{ session('status') }}</div>
+@endif
+@if ($errors->any() && ! request()->ajax())
     <div style="background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:14px 20px;border-radius:14px;margin-bottom:24px;font-size:14px">
         <ul style="margin:0;padding-left:18px">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
     </div>
 @endif
 
-<!-- Hero / Profile Header -->
 <div class="container">
 <section class="profile-page">
+    <!-- Hero / Profile Header -->
     <div class="profile-hero">
         <div class="profile-hero-grid">
             <div class="profile-avatar-wrap">
                 @if ($user->avatar)
-                    <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}" class="profile-avatar">
+                    <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}" class="profile-avatar" id="avatarPreview">
                 @else
-                    <div class="profile-avatar-placeholder">{{ strtoupper(substr($user->name,0,1)) }}</div>
+                    <div class="profile-avatar-placeholder" id="avatarPlaceholder">{{ strtoupper(substr($user->name,0,1)) }}</div>
                 @endif
                 <button class="profile-avatar-badge" title="Ubah foto" onclick="document.getElementById('avatarInput').click()">📷</button>
-                <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display:none" onchange="document.getElementById('avatarForm').submit()">
+                <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display:none">
                 <form id="avatarForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" style="display:none">@csrf</form>
             </div>
             <div class="profile-info">
@@ -203,7 +257,7 @@
                     <div class="profile-meta-item"><span class="label">Bergabung</span><span class="value">{{ $user->created_at->format('d M Y') }}</span></div>
                 </div>
                 <div class="profile-actions">
-                    <form id="editForm" method="POST" action="{{ route('profile.update') }}" style="display:inline">
+                    <form id="editForm" method="POST" action="{{ route('profile.update') }}">
                         @csrf
                         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                             <label class="toggle-edit" style="cursor:pointer">
@@ -227,14 +281,14 @@
                     </div>
                 </div>
                 <div style="margin-top:10px">
-                    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" style="display:inline">
+                    <form id="avatarUploadForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" style="display:inline">
                         @csrf
-                        <input type="file" name="avatar" accept="image/*" style="display:none" onchange="this.form.submit()">
+                        <input type="file" name="avatar" accept="image/*" id="avatarFileInput" style="display:none">
                         <label style="cursor:pointer; display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border:1px solid var(--line); border-radius:12px; background:var(--white); color:var(--pink-dark); font-weight:700; font-size:14px; transition:all .2s ease" onmouseover="this.style.borderColor='var(--pink)';this.style.background='var(--pink-pale)'" onmouseout="this.style.borderColor='var(--line)';this.style.background='var(--white)'">
                             Ganti Foto Profil
                         </label>
                         @if ($user->avatar)
-                            <button type="button" style="margin-left:8px; padding:10px 16px; border:1px solid #dc2626; border-radius:12px; background:var(--white); color:#dc2626; font-weight:700; font-size:13px; cursor:pointer" onclick="if(confirm('Yakin hapus foto profil?')){ this.closest('form').querySelector('input[name=remove_avatar]').value='1'; this.closest('form').submit(); }">
+                            <button type="button" class="btn-confirm-delete" onclick="confirmRemoveAvatar(this)">
                                 <input type="hidden" name="remove_avatar" value="0"> Hapus Foto
                             </button>
                         @endif
@@ -268,174 +322,418 @@
 
     <!-- History -->
     <section class="profile-history">
-        <div class="profile-filters">
-            <a href="{{ request()->fullUrlWithQuery(['filter' => 'all']) }}" class="profile-filter-tab {{ $filter === 'all' ? 'active' : '' }}">
-                Semua <span class="count">{{ $stats['total'] }}</span>
-            </a>
-            <a href="{{ request()->fullUrlWithQuery(['filter' => 'unpaid']) }}" class="profile-filter-tab {{ $filter === 'unpaid' ? 'active' : '' }}">
-                Belum Dibayar <span class="count">{{ $stats['unpaid'] }}</span>
-            </a>
-            <a href="{{ request()->fullUrlWithQuery(['filter' => 'paid']) }}" class="profile-filter-tab {{ $filter === 'paid' ? 'active' : '' }}">
-                Berhasil <span class="count">{{ $stats['paid'] }}</span>
-            </a>
-            <a href="{{ request()->fullUrlWithQuery(['filter' => 'failed']) }}" class="profile-filter-tab {{ $filter === 'failed' ? 'active' : '' }}">
-                Gagal / Kadaluarsa <span class="count">{{ $stats['failed'] }}</span>
-            </a>
+        <div id="transactionsContainer" data-url="{{ route('profile.transactions') }}" data-current-filter="{{ $filter }}">
+            @include('profile-transactions-list', ['user' => $user, 'bookings' => $bookings, 'stats' => $stats, 'filter' => $filter])
         </div>
-
-        <div class="profile-history-header">
-            <h2 class="profile-history-title">Riwayat Pembayaran</h2>
-            @if ($bookings->isEmpty() && $filter !== 'all')
-                <a href="{{ route('treatment') }}" class="button button-pink button-small">Lihat Semua Treatment</a>
-            @endif
-        </div>
-
-        @if ($bookings->isEmpty())
-            <div class="profile-empty">
-                <div class="profile-empty-icon">✦</div>
-                @if ($filter !== 'all')
-                    <h3>Belum ada transaksi {{ $filter === 'unpaid' ? 'yang menunggu pembayaran' : ($filter === 'paid' ? 'yang berhasil' : 'gagal / kadaluarsa') }}</h3>
-                    <p>Tidak ditemukan transaksi dengan status ini. Coba pilih filter "Semua" atau mulai perawatan pertama Anda.</p>
-                @else
-                    <h3>Belum ada riwayat transaksi</h3>
-                    <p>Mulai perawatan pertamamu bersama Beautycare dan lihat riwayat pembayaran di sini.</p>
-                @endif
-                <a href="{{ route('treatment') }}" class="button button-pink" style="padding:14px 32px;font-size:15px;font-weight:800">Jelajahi Treatment</a>
-            </div>
-        @else
-            <div class="profile-transactions">
-                @foreach ($bookings as $booking)
-                    <div class="transaction-card">
-                        <div class="transaction-top">
-                            <div>
-                                <div class="transaction-title">{{ $booking->treatment->name ?? $booking->treatment_slug }}</div>
-                                <div class="transaction-invoice">Invoice: <strong>{{ $booking->reference }}</strong></div>
-                            </div>
-                            <span class="status-badge {{ $booking->payment_status === 'dikonfirmasi' ? 'status-paid' : ($booking->payment_status === 'menunggu_verifikasi' ? 'status-pending' : 'status-failed') }}">
-                                <span class="dot"></span>
-                                {{ $booking->payment_status === 'dikonfirmasi' ? 'Lunas' : ($booking->payment_status === 'menunggu_verifikasi' ? 'Belum Dibayar' : 'Gagal / Kadaluarsa') }}
-                            </span>
-                        </div>
-                        <div class="transaction-meta">
-                            <div class="transaction-meta-item"><span class="transaction-meta-label">Tanggal</span><span class="transaction-meta-value">{{ $booking->booking_date->format('d M Y') }}</span></div>
-                            <div class="transaction-meta-item"><span class="transaction-meta-label">Waktu</span><span class="transaction-meta-value">{{ $booking->booking_time }} WIB</span></div>
-                            <div class="transaction-meta-item"><span class="transaction-meta-label">Metode</span><span class="transaction-meta-value">{{ $booking->midtrans_payment_type ?? '-' }}</span></div>
-                            <div class="transaction-meta-item"><span class="transaction-meta-label">Status Booking</span><span class="transaction-meta-value">{{ ucfirst($booking->status) }}</span></div>
-                        </div>
-                        <div class="transaction-total">Total: {{ number_format($booking->total_amount, 0, ',', '.') }}</div>
-                        <div class="transaction-bottom">
-                            <div class="transaction-actions-group">
-                                @if ($booking->payment_status === 'menunggu_verifikasi')
-                                    <button class="btn-pay btn-pay-{{ $booking->id }}" data-reference="{{ $booking->reference }}" data-total="{{ $booking->total_amount }}">
-                                        Bayar Sekarang
-                                    </button>
-                                @endif
-                                <a href="{{ route('profile.transactions.show', $booking->reference) }}" class="btn-detail">Lihat Detail</a>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <div class="profile-pagination">
-                {{ $bookings->links() }}
-            </div>
-        @endif
     </section>
 </section>
 </div>
 
-@endsection
+<!-- Transaction Detail Modal -->
+<div id="transactionModal" class="modal" aria-hidden="true" aria-labelledby="modalTitle" role="dialog">
+    <div class="modal-overlay" onclick="app.closeTransactionModal()"></div>
+    <div class="modal-content">
+        <button class="modal-close" onclick="app.closeTransactionModal()" aria-label="Tutup">✕</button>
+        <div class="modal-body" id="modalBody">
+            <div class="modal-loading"><div class="spinner"></div><div style="margin-top:10px">Memuat detail...</div></div>
+        </div>
+    </div>
+</div>
 
 @push('scripts')
 <script src="{{ config('services.midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 <script>
 (function() {
-    // Edit mode toggle
-    var toggle = document.getElementById('editModeToggle');
-    var fields = document.getElementById('editFields');
-    var saveBtn = document.getElementById('saveBtn');
-    var toggleText = document.getElementById('toggleText');
+    'use strict';
 
-    if (toggle && fields) {
-        toggle.addEventListener('change', function() {
-            if (this.checked) {
-                fields.style.display = 'block';
-                toggleText.textContent = 'Selesai';
-                if (saveBtn) saveBtn.disabled = false;
-            } else {
-                fields.style.display = 'none';
-                toggleText.textContent = 'Ubah data';
-                if (saveBtn) saveBtn.disabled = true;
+    var app = {
+        csrfToken: '{{ csrf_token() }}',
+
+        init: function() {
+            this.ensureCsrfMeta();
+            this.showInlineFlash();
+            this.initEditToggle();
+            this.initProfileForms();
+            this.initFilters();
+            this.initPayButtons();
+        },
+
+        ensureCsrfMeta: function() {
+            if (!document.querySelector('meta[name="csrf-token"]')) {
+                var meta = document.createElement('meta');
+                meta.name = 'csrf-token';
+                meta.content = this.csrfToken;
+                document.head.appendChild(meta);
             }
-        });
-    }
+        },
 
-    // Pay buttons
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('btn-pay')) {
-            e.preventDefault();
-            var btn = e.target;
-            var reference = btn.dataset.reference;
-            btn.disabled = true;
-            btn.textContent = 'Memuat...';
-            btn.style.opacity = '0.7';
+        showInlineFlash: function() {
+            var el = document.getElementById('inline-flash');
+            if (el) {
+                this.showToast(el.dataset.message, el.dataset.type);
+                el.remove();
+            }
+        },
 
-            fetch('/profil/transaksi/' + encodeURIComponent(reference) + '/bayar', {
-                method: 'POST',
+        showToast: function(message, type) {
+            var container = document.getElementById('toastContainer');
+            var toast = document.createElement('div');
+            toast.className = 'toast ' + (type || 'info');
+            toast.innerHTML = '<span class="icon">' + (type === 'success' ? '✦' : type === 'error' ? '!' : 'ℹ') + '</span><span>' + message + '</span>';
+            container.appendChild(toast);
+            setTimeout(function() {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(40px)';
+                setTimeout(function() { toast.remove(); }, 350);
+            }, type === 'error' ? 6000 : 4000);
+        },
+
+        api: function(url, method, body) {
+            var opts = {
+                method: method,
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            };
+            if (body) opts.body = body;
+            return fetch(url, opts).then(function(r) {
+                if (!r.ok) return r.json().then(function(err) { throw err; });
+                return r.json();
+            });
+        },
+
+        initEditToggle: function() {
+            var toggle = document.getElementById('editModeToggle');
+            var fields = document.getElementById('editFields');
+            var saveBtn = document.getElementById('saveBtn');
+            var toggleText = document.getElementById('toggleText');
+            if (!toggle || !fields) return;
+            toggle.addEventListener('change', function() {
+                if (this.checked) {
+                    fields.style.display = 'block';
+                    if (toggleText) toggleText.textContent = 'Selesai';
+                    if (saveBtn) saveBtn.disabled = false;
+                } else {
+                    fields.style.display = 'none';
+                    if (toggleText) toggleText.textContent = 'Ubah data';
+                    if (saveBtn) saveBtn.disabled = true;
+                }
+            });
+        },
+
+        initProfileForms: function() {
+            var self = this;
+
+            // Edit phone/address form (AJAX)
+            var editForm = document.getElementById('editForm');
+            if (editForm) {
+                editForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    var btn = document.getElementById('saveBtn');
+                    var toggle = document.getElementById('editModeToggle');
+                    var fields = document.getElementById('editFields');
+                    var toggleText = document.getElementById('toggleText');
+
+                    var formData = new FormData(editForm);
+                    btn.disabled = true;
+                    btn.textContent = 'Menyimpan...';
+
+                    self.api(editForm.action, 'POST', formData)
+                        .then(function(data) {
+                            self.showToast(data.status || 'Profil diperbarui.', 'success');
+                            btn.disabled = false;
+                            btn.textContent = 'Simpan';
+                            if (toggle) { toggle.checked = false; toggle.dispatchEvent(new Event('change')); }
+                            if (toggleText) toggleText.textContent = 'Ubah data';
+                            // Refresh meta values without reload
+                            var phoneInput = editForm.querySelector('input[name="phone"]');
+                            var addressInput = editForm.querySelector('textarea[name="address"]');
+                            if (phoneInput && phoneInput.value) {
+                                var el = document.querySelector('.profile-meta-item .value');
+                                // best effort update handled by page semantics
+                            }
+                        })
+                        .catch(function(err) {
+                            var msg = err && err.message ? err.message : 'Gagal menyimpan profil.';
+                            self.showToast(msg, 'error');
+                            btn.disabled = false;
+                            btn.textContent = 'Simpan';
+                        });
+                });
+            }
+
+            // Avatar file input change -> AJAX upload
+            var avatarInputs = [document.getElementById('avatarFileInput'), document.getElementById('avatarInput')];
+            var avatarForm = document.getElementById('avatarUploadForm');
+            if (avatarForm) {
+                avatarInputs.forEach(function(input) {
+                    if (!input) return;
+                    input.addEventListener('change', function() {
+                        if (!this.files.length) return;
+                        var formData = new FormData(avatarForm);
+                        formData.append('avatar', this.files[0]);
+                        var label = avatarForm.querySelector('label[for="avatarFileInput"]');
+                        var originalHTML = label ? label.innerHTML : '';
+                        if (label) {
+                            label.innerHTML = '<div class="spinner" style="width:20px;height:20px"></div>';
+                            label.disabled = true;
+                        }
+
+                        self.api(avatarForm.action, 'POST', formData)
+                            .then(function(data) {
+                                self.showToast(data.status || 'Foto profil diperbarui.', 'success');
+                                location.reload();
+                            })
+                            .catch(function(err) {
+                                var msg = err && err.message ? err.message : 'Gagal mengupload foto.';
+                                self.showToast(msg, 'error');
+                                if (label) { label.innerHTML = originalHTML; label.disabled = false; }
+                                input.value = '';
+                            });
+                    });
+                });
+            }
+
+            // Confirm remove avatar
+            window.confirmRemoveAvatar = function(btn) {
+                if (!confirm('Yakin ingin menghapus foto profil?')) return;
+                var form = btn.closest('form');
+                var hidden = form.querySelector('input[name="remove_avatar"]');
+                hidden.value = '1';
+                var formData = new FormData(form);
+                btn.disabled = true;
+                btn.textContent = 'Menghapus...';
+                self.api(form.action, 'POST', formData)
+                    .then(function(data) {
+                        self.showToast(data.status || 'Foto profil dihapus.', 'success');
+                        location.reload();
+                    })
+                    .catch(function(err) {
+                        var msg = err && err.message ? err.message : 'Gagal menghapus foto.';
+                        self.showToast(msg, 'error');
+                        btn.disabled = false;
+                        btn.textContent = 'Hapus Foto';
+                        hidden.value = '0';
+                    });
+            };
+        },
+
+        initFilters: function() {
+            var container = document.getElementById('transactionsContainer');
+            var self = this;
+            if (!container) return;
+
+            // AJAX pagination links inside container (event delegation)
+            container.addEventListener('click', function(e) {
+                var link = e.target.closest('.profile-pagination a');
+                if (!link) return;
+                e.preventDefault();
+                self.loadTransactions(link.href, null);
+            });
+        },
+
+        filterTransactions: function(filter, btn) {
+            var container = document.getElementById('transactionsContainer');
+            var baseUrl = container.dataset.url;
+            var url = baseUrl + (baseUrl.indexOf('?') === -1 ? '?' : '&') + 'filter=' + filter;
+            var self = this;
+
+            // Visual active state on chips
+            document.querySelectorAll('.profile-filter-chip').forEach(function(chip) {
+                chip.classList.remove('active');
+            });
+            btn.classList.add('active');
+            btn.classList.add('loading');
+            container.style.opacity = '0.5';
+
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html'
                 }
             })
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data.error) {
-                    alert(data.error);
-                    btn.disabled = false;
-                    btn.textContent = 'Bayar Sekarang';
-                    btn.style.opacity = '1';
-                    return;
+            .then(function(r) { return r.text(); })
+            .then(function(html) {
+                var temp = document.createElement('div');
+                temp.innerHTML = html;
+                var newContainer = temp.querySelector('#transactionsContainer');
+                if (newContainer) {
+                    container.innerHTML = newContainer.innerHTML;
+                    container.dataset.currentFilter = newContainer.dataset.currentFilter || filter;
                 }
-                var snapToken = data.snap_token;
-                if (typeof snap === 'undefined') {
-                    alert('Sistem pembayaran tidak dapat dimuat. Silakan coba lagi nanti.');
-                    btn.disabled = false;
-                    btn.textContent = 'Bayar Sekarang';
-                    btn.style.opacity = '1';
-                    return;
-                }
-                snap.pay(snapToken, {
-                    onSuccess: function(result) {
-                        window.location.reload();
-                    },
-                    onPending: function(result) {
-                        window.location.reload();
-                    },
-                    onError: function(error) {
-                        alert('Terjadi kesalahan saat memproses pembayaran.');
-                        btn.disabled = false;
-                        btn.textContent = 'Bayar Sekarang';
-                        btn.style.opacity = '1';
-                    }
-                });
+                container.style.opacity = '1';
+                btn.classList.remove('loading');
+                try { history.pushState(null, '', url); } catch (e) {}
             })
             .catch(function() {
-                alert('Gagal memuat token pembayaran.');
-                btn.disabled = false;
-                btn.textContent = 'Bayar Sekarang';
-                btn.style.opacity = '1';
+                self.showToast('Gagal memuat riwayat transaksi.', 'error');
+                container.style.opacity = '1';
+                btn.classList.remove('loading');
             });
+        },
+
+        loadTransactions: function(url, activeTab) {
+            var container = document.getElementById('transactionsContainer');
+            var self = this;
+
+            // Set loading state
+            if (activeTab) {
+                document.querySelectorAll('.profile-filter-tab').forEach(function(t) { t.classList.remove('active'); });
+                activeTab.classList.add('active');
+                activeTab.classList.add('loading');
+            }
+            container.style.opacity = '0.5';
+
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html'
+                }
+            })
+            .then(function(r) { return r.text(); })
+            .then(function(html) {
+                var temp = document.createElement('div');
+                temp.innerHTML = html;
+                var newContainer = temp.querySelector('#transactionsContainer');
+                if (newContainer) {
+                    container.innerHTML = newContainer.innerHTML;
+                    container.dataset.currentFilter = newContainer.dataset.currentFilter || '';
+                    // Re-bind pagination (event delegation handles it)
+                }
+                container.style.opacity = '1';
+                if (activeTab) activeTab.classList.remove('loading');
+                // Update URL without reload
+                try { history.pushState(null, '', url); } catch (e) {}
+            })
+            .catch(function() {
+                self.showToast('Gagal memuat riwayat transaksi.', 'error');
+                container.style.opacity = '1';
+                if (activeTab) activeTab.classList.remove('loading');
+            });
+        },
+
+        initPayButtons: function() {
+            var self = this;
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-pay')) {
+                    e.preventDefault();
+                    var btn = e.target;
+                    var reference = btn.dataset.reference;
+                    btn.disabled = true;
+                    btn.classList.add('loading');
+                    btn.innerHTML = '<div class="spinner" style="width:18px;height:18px"></div>';
+
+                    self.api('/profil/transaksi/' + encodeURIComponent(reference) + '/bayar', 'POST')
+                        .then(function(data) {
+                            if (data.error) {
+                                app.showToast(data.error, 'error');
+                                btn.disabled = false;
+                                btn.classList.remove('loading');
+                                btn.textContent = 'Bayar Sekarang';
+                                return;
+                            }
+                            var snapToken = data.snap_token;
+                            if (typeof snap === 'undefined') {
+                                app.showToast('Sistem pembayaran tidak dapat dimuat. Silakan coba lagi nanti.', 'error');
+                                btn.disabled = false;
+                                btn.classList.remove('loading');
+                                btn.textContent = 'Bayar Sekarang';
+                                return;
+                            }
+                            snap.pay(snapToken, {
+                                onSuccess: function() { window.location.reload(); },
+                                onPending: function() { window.location.reload(); },
+                                onError: function() {
+                                    app.showToast('Terjadi kesalahan saat memproses pembayaran.', 'error');
+                                    btn.disabled = false;
+                                    btn.classList.remove('loading');
+                                    btn.textContent = 'Bayar Sekarang';
+                                }
+                            });
+                        })
+                        .catch(function() {
+                            app.showToast('Gagal memuat token pembayaran.', 'error');
+                            btn.disabled = false;
+                            btn.classList.remove('loading');
+                            btn.textContent = 'Bayar Sekarang';
+                        });
+                }
+
+                if (e.target.classList.contains('btn-view-detail')) {
+                    e.preventDefault();
+                    var reference = e.target.dataset.reference;
+                    app.openTransactionModal(reference);
+                }
+            });
+        },
+
+        openTransactionModal: function(reference) {
+            var modal = document.getElementById('transactionModal');
+            var body = document.getElementById('modalBody');
+            var self = this;
+            document.documentElement.classList.add('modal-open');
+            body.innerHTML = '<div class="modal-loading"><div class="spinner"></div><div style="margin-top:10px">Memuat detail transaksi...</div></div>';
+            modal.style.display = 'flex';
+
+            fetch('/profil/transaksi/' + encodeURIComponent(reference), {
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'text/html' }
+            })
+            .then(function(r) { return r.text(); })
+            .then(function(html) {
+                var temp = document.createElement('div');
+                temp.innerHTML = html;
+                var detail = temp.querySelector('.detail-card');
+                if (detail) {
+                    body.innerHTML = detail.outerHTML;
+                    // Re-init pay button inside modal
+                    var payBtn = body.querySelector('.btn-pay-detail');
+                    if (payBtn) {
+                        payBtn.addEventListener('click', function(ev) {
+                            ev.preventDefault();
+                            var ref = payBtn.dataset.reference;
+                            payBtn.disabled = true;
+                            payBtn.textContent = 'Memuat...';
+                            self.api('/profil/transaksi/' + encodeURIComponent(ref) + '/bayar', 'POST')
+                                .then(function(data) {
+                                    if (data.error) { app.showToast(data.error, 'error'); payBtn.disabled = false; payBtn.textContent = 'Bayar Sekarang'; return; }
+                                    snap.pay(data.snap_token, {
+                                        onSuccess: function() { app.closeTransactionModal(); window.location.reload(); },
+                                        onPending: function() { app.closeTransactionModal(); window.location.reload(); },
+                                        onError: function() { app.showToast('Gagal memproses pembayaran.', 'error'); payBtn.disabled = false; payBtn.textContent = 'Bayar Sekarang'; }
+                                    });
+                                })
+                                .catch(function() { app.showToast('Gagal memuat token pembayaran.', 'error'); payBtn.disabled = false; payBtn.textContent = 'Bayar Sekarang'; });
+                        });
+                    }
+                } else {
+                    body.innerHTML = '<div class="modal-error">Detail transaksi tidak tersedia.</div>';
+                }
+            })
+            .catch(function() {
+                body.innerHTML = '<div class="modal-error">Gagal memuat detail transaksi.</div>';
+            });
+        },
+
+        closeTransactionModal: function() {
+            var modal = document.getElementById('transactionModal');
+            document.documentElement.classList.remove('modal-open');
+            modal.style.display = 'none';
+            document.getElementById('modalBody').innerHTML = '';
         }
+    };
+
+    // Close modal on Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') app.closeTransactionModal();
     });
 
-    // CSRF meta tag
-    if (!document.querySelector('meta[name="csrf-token"]')) {
-        var meta = document.createElement('meta');
-        meta.name = 'csrf-token';
-        meta.content = '{{ csrf_token() }}';
-        document.head.appendChild(meta);
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        app.init();
+    });
 })();
 </script>
 @endpush
+
+@endsection

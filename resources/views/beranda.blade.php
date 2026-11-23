@@ -2,7 +2,7 @@
     $features = [
         ['label' => 'Aman & Terpercaya', 'description' => 'Klinik terlisensi & terstandar', 'icon' => 'shield'],
         ['label' => 'Terapis Profesional', 'description' => 'Ditangani tenaga ahli bersertifikat', 'icon' => 'user'],
-        ['label' => 'Hasil Optimal', 'description' => 'Teknologi modern & produk klinis', 'icon' => 'star'],
+        ['label' => 'Lisensi Klinik', 'description' => 'Terdaftar resmi & berizin sesuai peraturan', 'icon' => 'license'],
     ];
 
     $reasons = [
@@ -55,15 +55,6 @@
                 <div class="octa-hero-main">
                     <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=900&q=90" alt="Perawatan wajah profesional di Octa Beauty Care" fetchpriority="high">
                 </div>
-                <div class="octa-hero-float octa-hero-float-expert">
-                    <span class="octa-hero-float-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c0-3.5 3-5.8 7-5.8s7 2.3 7 5.8"/><path d="m9 12.5 1.8 1.8L15 10"/></svg>
-                    </span>
-                    <div>
-                        <strong>Terapis Bersertifikat</strong>
-                        <span>Ditangani tenaga ahli</span>
-                    </div>
-                </div>
                 <div class="octa-hero-float octa-hero-float-clients">
                     <span class="octa-hero-float-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path class="octa-solid" d="M12 3.2l2.5 5.4 5.9.7-4.4 4 1.2 5.8-5.2-2.9-5.2 2.9 1.2-5.8-4.4-4 5.9-.7L12 3.2Z"/></svg>
@@ -85,7 +76,11 @@
                         @if ($feature['icon'] === 'shield')
                             <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.4-3 7.3-7 8.5-4-1.2-7-4.1-7-8.5V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
                         @elseif ($feature['icon'] === 'user')
-                            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20.5c0-3.7 3.3-6 7.5-6s7.5 2.3 7.5 6"/><path d="M9.5 13.4 9 20.5M14.5 13.4l.5 7.1"/></svg>
+                            <div class="octa-strip-cert" aria-hidden="true">
+                                <img src="https://images.unsplash.com/photo-1549808887-c99269e6513b?auto=format&fit=crop&w=320&q=85" alt="Sertifikat keahlian terapis Octa Beauty Care" data-modal="license-therapist" loading="lazy">
+                            </div>
+                        @elseif ($feature['icon'] === 'license')
+                            <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M7 10h4M7 15h4M11 10h1M11 15h1"/></svg>
                         @else
                             <svg viewBox="0 0 24 24"><path class="octa-solid" d="M12 3.2l2.5 5.4 5.9.7-4.4 4 1.2 5.8-5.2-2.9-5.2 2.9 1.2-5.8-4.4-4 5.9-.7L12 3.2Z"/></svg>
                         @endif
@@ -117,7 +112,33 @@
                         </div>
                         <div class="octa-service-body">
                             <h3>{{ $service['name'] }}</h3>
+                            <span class="octa-service-price">{{ rupiah($service['price']) }}</span>
                             <p>{{ $service['description'] }}</p>
+                            <div class="octa-service-meta">
+                                @if (! empty($service['duration']))
+                                    <span class="octa-service-duration" aria-label="Durasi treatment {{ $service['duration'] }} menit">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg>
+                                        {{ $service['duration'] }} menit
+                                    </span>
+                                @endif
+                            </div>
+                            @if (! empty($service['social_media']))
+                                <div class="octa-service-social" aria-label="Media sosial {{ $service['name'] }}">
+                                    @foreach ($service['social_media'] as $type => $url)
+                                        <a href="{{ $url }}" class="octa-service-social-icon" target="_blank" rel="noopener noreferrer" aria-label="{{ ucfirst($type) }}">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                @if ($type === 'instagram')
+                                                    <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/>
+                                                @elseif ($type === 'whatsapp')
+                                                    <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/><path d="M8.7 8.2c.3 0 .5.2.7.4l.6 1.2c.1.2.1.4 0 .6l-.4.5c.5 1 1.2 1.8 2.2 2.3l.5-.4c.2-.1.4-.1.6 0l1.2.6c.2.1.4.4.4.7v1c0 .5-.4.9-.9.9-4 .2-7.7-3.4-7.9-7.4 0-.5.4-.9.9-.9h1Z"/>
+                                                @elseif ($type === 'facebook')
+                                                    <path class="social-fill" d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4.1 1.5-4.1 4.2v2.2H7.5V13h2.8v8h3.2Z"/>
+                                                @endif
+                                            </svg>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
                     </article>
                 @endforeach
@@ -234,6 +255,40 @@
         </div>
     </section>
 
+    <section class="octa-license" aria-labelledby="license-title">
+        <div class="container">
+            <div class="octa-license-head">
+                <span class="eyebrow"><span class="eyebrow-dot"></span> Legalitas & Kepercayaan</span>
+                <h2 id="license-title">Lisensi dan <em>Sertifikat</em> Kami</h2>
+                <p>Octa Beauty Care beroperasi dengan lisensi klinis resmi dan terapis yang bersertifikat. Klik gambar untuk melihat detailnya.</p>
+            </div>
+            <div class="octa-license-grid">
+                <article class="octa-license-card">
+                    <div class="octa-license-media" data-modal="license-therapist">
+                        <img src="https://images.unsplash.com/photo-1549808887-c99269e6513b?auto=format&fit=crop&w=700&q=85" alt="Sertifikat kompetensi terapis Octa Beauty Care" loading="lazy">
+                        <span class="octa-license-badge">Sertifikat Terapis</span>
+                    </div>
+                    <div class="octa-license-body">
+                        <h3>Sertifikat Kompetensi Terapis</h3>
+                        <p>Semua terapis Octa Beauty Care lulus sertifikasi perawatan kulit dan kecantikan dari lembaga terakreditasi.</p>
+                        <a class="octa-license-link" href="#" data-modal="license-therapist">Lihat Sertifikat <span aria-hidden="true">→</span></a>
+                    </div>
+                </article>
+                <article class="octa-license-card">
+                    <div class="octa-license-media" data-modal="license-clinic">
+                        <img src="https://images.unsplash.com/photo-1551081883-c9e9e960f0e6?auto=format&fit=crop&w=700&q=85" alt="Lisensi operasional klinik Octa Beauty Care" loading="lazy">
+                        <span class="octa-license-badge">Lisensi Klinik</span>
+                    </div>
+                    <div class="octa-license-body">
+                        <h3>Lisensi Operasional Klinik</h3>
+                        <p>Klinik kami terdaftar resmi dan berizin mengelola layanan perawatan kecantikan kulit sesuai peraturan yang berlaku.</p>
+                        <a class="octa-license-link" href="#" data-modal="license-clinic">Lihat Lisensi <span aria-hidden="true">→</span></a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
     <section class="octa-insta" id="artikel" aria-labelledby="insta-title">
         <div class="container">
             <div class="octa-insta-head">
@@ -270,4 +325,74 @@
             </div>
         </div>
     </section>
+
+    <!-- Modal Sertifikat & Lisensi -->
+    <div class="octa-modal" id="octa-modal" role="dialog" aria-modal="true" aria-labelledby="octa-modal-title" hidden>
+        <div class="octa-modal-backdrop" data-modal-close></div>
+        <div class="octa-modal-panel">
+            <button class="octa-modal-close" data-modal-close aria-label="Tutup modal">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="octa-modal-content">
+                <h3 id="octa-modal-title"></h3>
+                <div class="octa-modal-image-wrap">
+                    <img id="octa-modal-image" src="" alt="" loading="lazy">
+                </div>
+                <p id="octa-modal-caption"></p>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('scripts')
+    <script>
+        (() => {
+            const modal = document.getElementById('octa-modal');
+            const backdrop = document.querySelector('.octa-modal-backdrop');
+            const closeBtn = document.querySelector('.octa-modal-close');
+            const modalTitle = document.getElementById('octa-modal-title');
+            const modalImage = document.getElementById('octa-modal-image');
+            const modalCaption = document.getElementById('octa-modal-caption');
+            const openers = document.querySelectorAll('[data-modal]');
+
+            const openModal = (id) => {
+                const el = document.getElementById(id);
+                if (!el || !modal) return;
+                const img = el.querySelector('img');
+                const title = el.querySelector('h3')?.textContent ?? el.querySelector('.octa-license-badge')?.textContent ?? '';
+                const caption = el.querySelector('p')?.textContent ?? '';
+                if (img) {
+                    modalImage.src = img.src;
+                    modalImage.alt = img.alt;
+                }
+                modalTitle.textContent = title;
+                modalCaption.textContent = caption;
+                modal.hidden = false;
+                document.body.style.overflow = 'hidden';
+            };
+
+            const closeModal = () => {
+                if (!modal) return;
+                modal.hidden = true;
+                modalImage.src = '';
+                document.body.style.overflow = '';
+            };
+
+            openers.forEach((opener) => {
+                opener.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    openModal(opener.getAttribute('data-modal'));
+                });
+            });
+
+            closeBtn?.addEventListener('click', closeModal);
+            backdrop?.addEventListener('click', closeModal);
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modal && !modal.hidden) {
+                    closeModal();
+                }
+            });
+        })();
+    </script>
+@endpush
