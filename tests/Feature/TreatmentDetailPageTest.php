@@ -2,10 +2,35 @@
 
 namespace Tests\Feature;
 
+use App\Models\Treatment;
 use Tests\TestCase;
 
 class TreatmentDetailPageTest extends TestCase
 {
+    public function test_treatment_filters_are_generated_from_active_database_treatments(): void
+    {
+        Treatment::create([
+            'slug' => 'acne-care-special',
+            'name' => 'Acne Care Special',
+            'filter' => 'acne-care',
+            'category' => 'Acne Care',
+        ]);
+
+        Treatment::create([
+            'slug' => 'inactive-treatment',
+            'name' => 'Inactive Treatment',
+            'filter' => 'inactive-category',
+            'category' => 'Inactive Category',
+            'is_active' => false,
+        ]);
+
+        $this->get('/treatment')
+            ->assertOk()
+            ->assertSee('data-filter="acne-care">Acne Care', false)
+            ->assertSee('data-filter="acne-care"', false)
+            ->assertDontSee('data-filter="inactive-category"', false);
+    }
+
     public function test_treatment_card_links_to_its_detail_page(): void
     {
         $this->get('/treatment')

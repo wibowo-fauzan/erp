@@ -96,7 +96,14 @@ class TreatmentResource extends Resource
 
                         Forms\Components\TextInput::make('filter')
                             ->label('Filter / Kategori')
-                            ->helperText('Contoh: facial, brightening, anti-aging, consultation')
+                            ->helperText('Gunakan nilai konsisten, misalnya facial, acne, brightening, anti-aging, atau body.')
+                            ->required()
+                            ->maxLength(100),
+
+                        Forms\Components\TextInput::make('category')
+                            ->label('Nama Kategori')
+                            ->helperText('Nama yang ditampilkan pada tombol filter dan badge, misalnya Facial atau Body Treatment.')
+                            ->required()
                             ->maxLength(100),
 
                         Forms\Components\Toggle::make('is_primary')

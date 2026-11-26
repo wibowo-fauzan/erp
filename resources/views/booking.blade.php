@@ -207,17 +207,28 @@
                     : info?.type === 'partial_day' ? 'Parcial (Jam Tertentu)'
                     : info?.type === 'recurring' ? 'Berulang (Setiap Minggu)'
                     : '-';
+                const content = document.createElement('div');
+                content.style.textAlign = 'left';
+                content.style.fontSize = '14px';
+                content.style.lineHeight = '1.6';
+
+                const appendRow = (label, value) => {
+                    const paragraph = document.createElement('p');
+                    paragraph.style.margin = '4px 0';
+                    const labelElement = document.createElement('strong');
+                    labelElement.textContent = `${label}:`;
+                    paragraph.append(labelElement, document.createTextNode(` ${value}`));
+                    content.append(paragraph);
+                };
+
+                appendRow('Tanggal', `${startDate}${endDate && endDate !== startDate ? ' s/d ' + endDate : ''}`);
+                appendRow('Waktu', timeRange);
+                appendRow('Tipe', typeLabel);
+                appendRow('Keterangan', info?.description || 'Tidak ada keterangan.');
 
                 Swal.fire({
-                    title: `<strong>${info?.title || 'Tidak tersedia'}</strong>`,
-                    html: `
-                        <div style="text-align:left; font-size:14px; line-height:1.6">
-                            <p style="margin:4px 0"><strong>Tanggal:</strong> ${startDate}${endDate && endDate !== startDate ? ' s/d ' + endDate : ''}</p>
-                            <p style="margin:4px 0"><strong>Waktu:</strong> ${timeRange}</p>
-                            <p style="margin:4px 0"><strong>Tipe:</strong> ${typeLabel}</p>
-                            <p style="margin:4px 0"><strong>Keterangan:</strong> ${info?.description || 'Tidak ada keterangan.'}</p>
-                        </div>
-                    `,
+                    titleText: info?.title || 'Tidak tersedia',
+                    html: content,
                     icon: 'warning',
                     confirmButtonText: 'Mengerti',
                 });

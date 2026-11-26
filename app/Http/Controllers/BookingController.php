@@ -19,10 +19,12 @@ use Illuminate\View\View;
 class BookingController extends Controller
 {
     protected BookingAvailabilityService $availability;
+    protected MidtransService $midtrans;
 
-    public function __construct(BookingAvailabilityService $availability)
+    public function __construct(BookingAvailabilityService $availability, MidtransService $midtrans)
     {
         $this->availability = $availability;
+        $this->midtrans = $midtrans;
     }
 
     public function create(Request $request): View|RedirectResponse
@@ -135,11 +137,10 @@ class BookingController extends Controller
             ]);
         }
 
-        $midtrans = new MidtransService;
         $midtransResult = null;
         $midtransError = null;
         try {
-            $midtransResult = $midtrans->createTransaction([
+            $midtransResult = $this->midtrans->createTransaction([
                 'order_id' => 'PENDING-'.Str::upper(Str::random(10)),
                 'gross_amount' => $price,
                 'name' => $validated['name'],
@@ -173,6 +174,10 @@ class BookingController extends Controller
                 'midtrans_response' => is_array($midtransResult) ? json_encode($midtransResult) : null,
             ]);
         });
+
+        if ($booking->user_id === null) {
+            session()->put('guest_booking_uploads.'.$booking->reference, true);
+        }
 
         if ($midtransError) {
             session()->flash('error', $midtransError);
@@ -213,6 +218,16 @@ class BookingController extends Controller
     public function uploadPaymentProof(Request $request, string $reference): RedirectResponse
     {
         $booking = Booking::query()->where('reference', $reference)->firstOrFail();
+
+        if ($booking->user_id !== null) {
+            abort_unless(auth()->check() && (int) auth()->id() === (int) $booking->user_id, 403);
+        } else {
+            abort_unless(session()->get('guest_booking_uploads.'.$booking->reference) === true, 403);
+        }
+
+        if ($booking->payment_status === 'dikonfirmasi' || $booking->midtrans_paid_at !== null) {
+            abort(409, 'Bukti pembayaran tidak dapat diubah setelah pembayaran dikonfirmasi.');
+        }
 
         $validated = $request->validate([
             'payment_proof' => ['required', 'image', 'max:2048'],

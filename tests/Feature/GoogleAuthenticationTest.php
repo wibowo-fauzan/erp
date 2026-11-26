@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
 use Tests\TestCase;
@@ -12,6 +13,23 @@ use Tests\TestCase;
 class GoogleAuthenticationTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_google_callback_rejects_invalid_state_without_retrying_stateless(): void
+    {
+        $userCount = User::query()->count();
+        $provider = Mockery::mock();
+        $provider->shouldReceive('user')->once()->andThrow(new InvalidStateException());
+        $provider->shouldNotReceive('stateless');
+
+        Socialite::shouldReceive('driver')->with('google')->once()->andReturn($provider);
+
+        $this->get('/auth/google/callback')
+            ->assertRedirect(route('login'))
+            ->assertSessionHasErrors('google');
+
+        $this->assertGuest();
+        $this->assertSame($userCount, User::query()->count());
+    }
 
     public function test_google_registration_creates_a_regular_user_and_signs_them_in(): void
     {

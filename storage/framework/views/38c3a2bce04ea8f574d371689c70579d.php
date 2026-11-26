@@ -19,9 +19,9 @@
     ];
 
     $testimonials = [
-        ['name' => 'Siska Amelia', 'role' => 'Pelanggan Setia', 'initials' => 'SA', 'quote' => 'Treatment Acne Care di Octa berhasil mengatasi jerawat yang mengganggu sekali. Tempatnya nyaman dan hasilnya luar biasa.'],
-        ['name' => 'Riana Puspita', 'role' => 'Pelanggan Setia', 'initials' => 'RP', 'quote' => 'Kulit wajah saya jadi lebih cerah dan sehat setelah facial treatment di sini. Pelayanannya sangat profesional.'],
-        ['name' => 'Elyzabeth Tanaya', 'role' => 'Member Premium', 'initials' => 'ET', 'quote' => 'Harga terjangkau dengan kualitas premium. Konsultasinya detail dan terapisnya benar-benar memahami kondisi kulit saya.'],
+        ['name' => 'Siska Amelia', 'role' => 'Pelanggan Setia', 'image' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=85', 'quote' => 'Treatment Acne Care di Octa berhasil mengatasi jerawat yang mengganggu sekali. Tempatnya nyaman dan hasilnya luar biasa.'],
+        ['name' => 'Riana Puspita', 'role' => 'Pelanggan Setia', 'image' => 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=120&h=120&q=85', 'quote' => 'Kulit wajah saya jadi lebih cerah dan sehat setelah facial treatment di sini. Pelayanannya sangat profesional.'],
+        ['name' => 'Elyzabeth Tanaya', 'role' => 'Member Premium', 'image' => 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=120&h=120&q=85', 'quote' => 'Harga terjangkau dengan kualitas premium. Konsultasinya detail dan terapisnya benar-benar memahami kondisi kulit saya.'],
     ];
 
     $instaPosts = [
@@ -77,7 +77,7 @@
                             <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.4-3 7.3-7 8.5-4-1.2-7-4.1-7-8.5V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
                         <?php elseif($feature['icon'] === 'user'): ?>
                             <div class="octa-strip-cert" aria-hidden="true">
-                                <img src="https://images.unsplash.com/photo-1549808887-c99269e6513b?auto=format&fit=crop&w=320&q=85" alt="Sertifikat keahlian terapis Octa Beauty Care" data-modal="license-therapist" loading="lazy">
+                                <img src="<?php echo e(asset('images/octa-certificate.png')); ?>" alt="Sertifikat keahlian terapis Octa Beauty Care" data-modal="license-therapist" loading="lazy">
                             </div>
                         <?php elseif($feature['icon'] === 'license'): ?>
                             <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M7 10h4M7 15h4M11 10h1M11 15h1"/></svg>
@@ -244,7 +244,7 @@
                         <div class="octa-testi-stars" aria-label="Rating 5 dari 5">★★★★★</div>
                         <blockquote><?php echo e($testimonial['quote']); ?></blockquote>
                         <div class="octa-testi-author">
-                            <span class="octa-testi-avatar" aria-hidden="true"><?php echo e($testimonial['initials']); ?></span>
+                            <img class="octa-testi-avatar" src="<?php echo e($testimonial['image']); ?>" alt="" loading="lazy">
                             <div>
                                 <strong><?php echo e($testimonial['name']); ?></strong>
                                 <span><?php echo e($testimonial['role']); ?></span>
@@ -264,9 +264,9 @@
                 <p>Octa Beauty Care beroperasi dengan lisensi klinis resmi dan terapis yang bersertifikat. Klik gambar untuk melihat detailnya.</p>
             </div>
             <div class="octa-license-grid">
-                <article class="octa-license-card">
+                <article class="octa-license-card" id="license-therapist">
                     <div class="octa-license-media" data-modal="license-therapist">
-                        <img src="https://images.unsplash.com/photo-1549808887-c99269e6513b?auto=format&fit=crop&w=700&q=85" alt="Sertifikat kompetensi terapis Octa Beauty Care" loading="lazy">
+                        <img src="<?php echo e(asset('images/octa-certificate.png')); ?>" alt="Sertifikat kompetensi terapis Octa Beauty Care" loading="lazy">
                         <span class="octa-license-badge">Sertifikat Terapis</span>
                     </div>
                     <div class="octa-license-body">
@@ -275,9 +275,9 @@
                         <a class="octa-license-link" href="#" data-modal="license-therapist">Lihat Sertifikat <span aria-hidden="true">→</span></a>
                     </div>
                 </article>
-                <article class="octa-license-card">
+                <article class="octa-license-card" id="license-clinic">
                     <div class="octa-license-media" data-modal="license-clinic">
-                        <img src="https://images.unsplash.com/photo-1551081883-c9e9e960f0e6?auto=format&fit=crop&w=700&q=85" alt="Lisensi operasional klinik Octa Beauty Care" loading="lazy">
+                        <img src="<?php echo e(asset('images/octa-clinic-license.png')); ?>" alt="Lisensi operasional klinik Octa Beauty Care" loading="lazy">
                         <span class="octa-license-badge">Lisensi Klinik</span>
                     </div>
                     <div class="octa-license-body">

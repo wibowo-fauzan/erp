@@ -35,7 +35,7 @@
                         <tr>
                             <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ $booking->reference }}</td>
                             <td class="px-4 py-3 text-sm text-gray-600">{{ $booking->user?->name ?? $booking->name }}</td>
-                            <td class="px-4 py-3 text-sm text-gray-600">{{ \App\Models\Treatment::query()->where('slug', $booking->treatment_slug)->value('name') ?? $booking->treatment_slug }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-600">{{ $booking->treatment?->name ?? $booking->treatment_slug }}</td>
                             <td class="px-4 py-3 text-sm text-gray-600">Rp {{ number_format($booking->total_amount ?? 0, 0, ',', '.') }}</td>
                             <td class="px-4 py-3 text-sm text-gray-600">
                                 @if($booking->payment_proof)
@@ -73,6 +73,9 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        <div>
+            {{ $bookings->links() }}
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">

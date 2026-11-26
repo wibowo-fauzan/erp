@@ -5,17 +5,6 @@
 @section('meta_image', 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=1200&h=630&q=85')
 
 @section('content')
-    @php
-        $filters = [
-            'semua' => 'Semua',
-            'facial' => 'Facial',
-            'acne' => 'Acne',
-            'brightening' => 'Brightening',
-            'anti-aging' => 'Anti Aging',
-            'body' => 'Body Treatment',
-        ];
-    @endphp
-
     <section class="treatment-page">
         <div class="treatment-hero">
             <div class="container treatment-hero-inner">

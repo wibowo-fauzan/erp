@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Treatment;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class TreatmentController extends Controller
@@ -15,7 +16,7 @@ class TreatmentController extends Controller
             ->map(fn ($t) => [
                 'slug' => $t->slug,
                 'filter' => $t->filter,
-                'category' => $t->category,
+                'category' => $t->category ?: ($t->filter ? Str::headline($t->filter) : null),
                 'title' => $t->name,
                 'description' => $t->description,
                 'duration' => $t->duration_minutes,
@@ -28,7 +29,15 @@ class TreatmentController extends Controller
                 'social_media' => $t->social_media,
             ]);
 
-        return view('treatment', ['services' => $treatments]);
+        $filters = $treatments
+            ->filter(fn ($treatment) => filled($treatment['filter']))
+            ->unique('filter')
+            ->mapWithKeys(fn ($treatment) => [$treatment['filter'] => $treatment['category']]);
+
+        return view('treatment', [
+            'services' => $treatments,
+            'filters' => collect(['semua' => 'Semua'])->union($filters),
+        ]);
     }
 
     public function show(string $slug): View

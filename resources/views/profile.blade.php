@@ -28,7 +28,12 @@
 .profile-meta-item:hover { border-color: var(--pink); background: var(--pink-pale); }
 .profile-meta-item .label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); min-width: 88px; }
 .profile-meta-item .value { font-weight: 500; word-break: break-word; }
-.profile-actions { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+.profile-actions { margin-top: 20px; }
+.profile-edit-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.profile-edit-fields { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+.profile-photo-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.profile-photo-button { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); color: var(--pink-dark); font-weight: 700; font-size: 14px; transition: all .2s ease; }
+.profile-photo-button:hover { border-color: var(--pink); background: var(--pink-pale); }
 
 /* Stats Grid */
 .profile-stats { margin-bottom: 32px; }
@@ -129,7 +134,7 @@
 .profile-edit-card { background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 32px; box-shadow: 0 4px 20px rgb(36 31 39 / 6%); margin-bottom: 32px; }
 .profile-edit-card h2 { font-family: var(--serif); font-size: 24px; font-weight: 700; margin: 0 0 8px; color: var(--ink); }
 .profile-edit-card p { color: var(--muted); margin: 0 0 24px; font-size: 15px; }
-.edit-form-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.edit-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .edit-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin-bottom: 8px; display: block; }
 .edit-input, .edit-textarea { width: 100%; padding: 14px 18px; border: 1px solid var(--line); border-radius: 14px; background: #fcfafa; font-size: 15px; color: var(--ink); transition: all .2s ease; font-family: inherit; }
 .edit-input:focus, .edit-textarea:focus { outline: none; border-color: var(--pink); box-shadow: 0 0 0 4px rgb(200 55 106 / 10%); background: #fff; }
@@ -191,7 +196,7 @@
     .profile-hero-grid { grid-template-columns: 1fr; gap: 24px; }
     .profile-avatar-wrap { width: 100px; height: 100px; margin: 0 auto; }
     .profile-info { text-align: center; }
-    .profile-actions { justify-content: center; }
+    .profile-edit-toolbar { justify-content: center; }
     .profile-meta-item { justify-content: center; }
     .profile-history-header { flex-direction: column; align-items: flex-start; gap: 14px; }
     .transaction-bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -204,6 +209,7 @@
     .profile-hero { padding: 28px; }
     .profile-edit-card { padding: 24px; }
     .profile-name { font-size: 28px; }
+    .edit-form-grid { grid-template-columns: 1fr; }
     .toast { min-width: auto; width: 90vw; }
 }
 </style>
@@ -239,9 +245,7 @@
                 @else
                     <div class="profile-avatar-placeholder" id="avatarPlaceholder">{{ strtoupper(substr($user->name,0,1)) }}</div>
                 @endif
-                <button class="profile-avatar-badge" title="Ubah foto" onclick="document.getElementById('avatarInput').click()">📷</button>
-                <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display:none">
-                <form id="avatarForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" style="display:none">@csrf</form>
+                <button type="button" class="profile-avatar-badge" title="Ubah foto" onclick="document.getElementById('avatarFileInput').click()">📷</button>
             </div>
             <div class="profile-info">
                 <div class="profile-role"><span class="profile-role-dot"></span>Pelanggan Beautycare</div>
@@ -259,32 +263,32 @@
                 <div class="profile-actions">
                     <form id="editForm" method="POST" action="{{ route('profile.update') }}">
                         @csrf
-                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                        <div class="profile-edit-toolbar">
                             <label class="toggle-edit" style="cursor:pointer">
                                 <input type="checkbox" name="edit_mode" id="editModeToggle" style="width:auto;height:auto;cursor:pointer" {{ $user->phone || $user->address ? '' : 'checked' }}>
                                 <span id="toggleText">Ubah data</span>
                             </label>
                             <button type="submit" class="btn-save" id="saveBtn" {{ ($user->phone || $user->address) && !request('edit_mode') ? 'disabled' : '' }}>Simpan</button>
                         </div>
-                    </form>
-                    <div id="editFields" style="margin-top:14px; padding-top:14px; border-top:1px solid var(--line); {{ ($user->phone || $user->address) && !request('edit_mode') ? 'display:none' : '' }}">
-                        <div class="edit-form-grid">
-                            <div>
-                                <span class="edit-label">Telepon</span>
-                                <input type="text" name="phone" value="{{ old('phone', $user->phone ?? '') }}" class="edit-input" placeholder="08xxxxxxxxxx">
-                            </div>
-                            <div>
-                                <span class="edit-label">Alamat</span>
-                                <textarea name="address" rows="2" class="edit-input edit-textarea" placeholder="Alamat lengkap Anda">{{ old('address', $user->address ?? '') }}</textarea>
+                        <div id="editFields" class="profile-edit-fields" style="{{ ($user->phone || $user->address) && !request('edit_mode') ? 'display:none' : '' }}">
+                            <div class="edit-form-grid">
+                                <div>
+                                    <span class="edit-label">Telepon</span>
+                                    <input type="text" name="phone" value="{{ old('phone', $user->phone ?? '') }}" class="edit-input" placeholder="08xxxxxxxxxx">
+                                </div>
+                                <div>
+                                    <span class="edit-label">Alamat</span>
+                                    <textarea name="address" rows="2" class="edit-input edit-textarea" placeholder="Alamat lengkap Anda">{{ old('address', $user->address ?? '') }}</textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-                <div style="margin-top:10px">
-                    <form id="avatarUploadForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" style="display:inline">
+                <div class="profile-photo-actions">
+                    <form id="avatarUploadForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                         @csrf
                         <input type="file" name="avatar" accept="image/*" id="avatarFileInput" style="display:none">
-                        <label style="cursor:pointer; display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border:1px solid var(--line); border-radius:12px; background:var(--white); color:var(--pink-dark); font-weight:700; font-size:14px; transition:all .2s ease" onmouseover="this.style.borderColor='var(--pink)';this.style.background='var(--pink-pale)'" onmouseout="this.style.borderColor='var(--line)';this.style.background='var(--white)'">
+                        <label class="profile-photo-button" for="avatarFileInput">
                             Ganti Foto Profil
                         </label>
                         @if ($user->avatar)
@@ -432,9 +436,6 @@
                 editForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     var btn = document.getElementById('saveBtn');
-                    var toggle = document.getElementById('editModeToggle');
-                    var fields = document.getElementById('editFields');
-                    var toggleText = document.getElementById('toggleText');
 
                     var formData = new FormData(editForm);
                     btn.disabled = true;
@@ -443,17 +444,7 @@
                     self.api(editForm.action, 'POST', formData)
                         .then(function(data) {
                             self.showToast(data.status || 'Profil diperbarui.', 'success');
-                            btn.disabled = false;
-                            btn.textContent = 'Simpan';
-                            if (toggle) { toggle.checked = false; toggle.dispatchEvent(new Event('change')); }
-                            if (toggleText) toggleText.textContent = 'Ubah data';
-                            // Refresh meta values without reload
-                            var phoneInput = editForm.querySelector('input[name="phone"]');
-                            var addressInput = editForm.querySelector('textarea[name="address"]');
-                            if (phoneInput && phoneInput.value) {
-                                var el = document.querySelector('.profile-meta-item .value');
-                                // best effort update handled by page semantics
-                            }
+                            setTimeout(function() { window.location.reload(); }, 600);
                         })
                         .catch(function(err) {
                             var msg = err && err.message ? err.message : 'Gagal menyimpan profil.';
@@ -465,7 +456,7 @@
             }
 
             // Avatar file input change -> AJAX upload
-            var avatarInputs = [document.getElementById('avatarFileInput'), document.getElementById('avatarInput')];
+            var avatarInputs = [document.getElementById('avatarFileInput')];
             var avatarForm = document.getElementById('avatarUploadForm');
             if (avatarForm) {
                 avatarInputs.forEach(function(input) {

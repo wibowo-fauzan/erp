@@ -35,9 +35,10 @@ class Pembayaran extends Page
     protected function getViewData(): array
     {
         $bookings = Booking::query()
-            ->with('user')
+            ->with(['user', 'treatment'])
             ->latest()
-            ->get();
+            ->paginate(25)
+            ->withQueryString();
 
         return [
             'bookings' => $bookings,

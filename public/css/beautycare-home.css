@@ -730,7 +730,7 @@ h1 em, h2 em { color: var(--pink); font-weight: 500; }
 .octa-testi-stars { color: #e8a83c; font-size: 16px; letter-spacing: .2em; }
 .octa-testi-card blockquote { margin: 14px 0 20px; color: #55505a; font-family: var(--serif); font-size: 18px; line-height: 1.7; }
 .octa-testi-author { display: flex; align-items: center; gap: 13px; padding-top: 16px; border-top: 1px solid var(--line); }
-.octa-testi-avatar { display: grid; width: 44px; height: 44px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: var(--pink-pale); color: var(--pink-dark); font-size: 15px; font-weight: 700; }
+.octa-testi-avatar { display: block; width: 44px; height: 44px; flex: 0 0 auto; border-radius: 50%; object-fit: cover; }
 .octa-testi-author strong { display: block; font-size: 15px; }
 .octa-testi-author span { display: block; margin-top: 3px; color: var(--muted); font-size: 14px; }
 
@@ -1708,6 +1708,10 @@ h1 em, h2 em { color: var(--pink); font-weight: 500; }
 .octa-license-card:hover { transform: translateY(-4px); box-shadow: 0 22px 48px rgb(58 30 45 / 10%); }
 .octa-license-media { position: relative; height: 200px; overflow: hidden; background: #f4e7ec; cursor: pointer; }
 .octa-license-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+#license-therapist .octa-license-media { background: #f8f4f1; }
+#license-therapist .octa-license-media img { object-fit: contain; }
+#license-clinic .octa-license-media { background: #f8f4f1; }
+#license-clinic .octa-license-media img { object-fit: contain; }
 .octa-license-card:hover .octa-license-media img { transform: scale(1.05); }
 .octa-license-badge { position: absolute; z-index: 1; top: 14px; left: 14px; padding: 6px 12px; border-radius: 999px; background: var(--pink); color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
 .octa-license-body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }

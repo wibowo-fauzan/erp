@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
-use App\Models\Treatment;
 use App\Services\MidtransService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,16 +31,9 @@ class ProfileController extends Controller
 
         $bookings = $query->paginate(10)->withQueryString();
 
-        $stats = [
-            'total' => $user->bookings()->count(),
-            'paid' => $user->bookings()->where('payment_status', 'dikonfirmasi')->count(),
-            'unpaid' => $user->bookings()->where('payment_status', 'menunggu_verifikasi')->count(),
-            'failed' => $user->bookings()->where('payment_status', 'ditolak')->count(),
-        ];
+        $stats = $this->getBookingStats($user->id);
 
-        $treatments = Treatment::query()->where('is_active', true)->get()->keyBy('slug');
-
-        return view('profile', compact('user', 'bookings', 'treatments', 'stats', 'filter'));
+        return view('profile', compact('user', 'bookings', 'stats', 'filter'));
     }
 
     public function transactions(Request $request): View
@@ -59,14 +52,30 @@ class ProfileController extends Controller
 
         $bookings = $query->paginate(10)->withQueryString();
 
-        $stats = [
-            'total' => $user->bookings()->count(),
-            'paid' => $user->bookings()->where('payment_status', 'dikonfirmasi')->count(),
-            'unpaid' => $user->bookings()->where('payment_status', 'menunggu_verifikasi')->count(),
-            'failed' => $user->bookings()->where('payment_status', 'ditolak')->count(),
-        ];
+        $stats = $this->getBookingStats($user->id);
 
         return view('profile-transactions-list', compact('user', 'bookings', 'stats', 'filter'));
+    }
+
+    private function getBookingStats(int $userId): array
+    {
+        $stats = DB::table('bookings')
+            ->where('user_id', $userId)
+            ->selectRaw(
+                'COUNT(*) AS total,
+                COALESCE(SUM(CASE WHEN payment_status = ? THEN 1 ELSE 0 END), 0) AS paid,
+                COALESCE(SUM(CASE WHEN payment_status = ? THEN 1 ELSE 0 END), 0) AS unpaid,
+                COALESCE(SUM(CASE WHEN payment_status = ? THEN 1 ELSE 0 END), 0) AS failed',
+                ['dikonfirmasi', 'menunggu_verifikasi', 'ditolak'],
+            )
+            ->first();
+
+        return [
+            'total' => (int) $stats->total,
+            'paid' => (int) $stats->paid,
+            'unpaid' => (int) $stats->unpaid,
+            'failed' => (int) $stats->failed,
+        ];
     }
 
     public function show(string $reference): View
@@ -122,7 +131,7 @@ class ProfileController extends Controller
         return response()->json(['snap_token' => $snapToken]);
     }
 
-    public function update(Request $request): RedirectResponse
+    public function update(Request $request): RedirectResponse|JsonResponse
     {
         $data = $request->validate([
             'phone' => ['nullable', 'string', 'max:30'],
@@ -149,6 +158,10 @@ class ProfileController extends Controller
 
         unset($data['remove_avatar']);
         $user->update($data);
+
+        if ($request->expectsJson()) {
+            return response()->json(['status' => 'Profil diperbarui.']);
+        }
 
         return redirect()->route('profile')->with('status', 'Profil diperbarui.');
     }

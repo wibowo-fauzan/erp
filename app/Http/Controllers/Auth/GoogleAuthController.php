@@ -21,7 +21,9 @@ class GoogleAuthController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
         } catch (InvalidStateException) {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            return redirect()->route('login')->withErrors([
+                'google' => 'Sesi login Google tidak valid atau sudah kedaluwarsa. Silakan coba lagi.',
+            ]);
         }
         $email = $googleUser->getEmail();
 
